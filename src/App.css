@@ -162,6 +162,30 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
+.geo-map-url-input {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: ui-monospace, 'Cascadia Code', 'Consolas', monospace;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.25);
+  color: rgba(255, 255, 255, 0.95);
+  box-sizing: border-box;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.geo-map-url-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.geo-map-url-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
 .geo-textarea {
   width: 100%;
   min-height: 180px;
@@ -310,6 +334,16 @@
 
   .geo-input-label span {
     color: #0f172a;
+  }
+
+  .geo-map-url-input {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #0f172a;
+  }
+
+  .geo-map-url-input::placeholder {
+    color: #64748b;
   }
 
   .geo-textarea {

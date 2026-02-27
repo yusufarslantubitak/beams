@@ -5,9 +5,10 @@ import type { FeatureCollection } from 'geojson';
 
 interface MapComponentProps {
   geojson?: FeatureCollection | null;
+  mapUrl?: string;
 }
 
-const MapComponent: React.FC<MapComponentProps> = ({ geojson }) => {
+const MapComponent: React.FC<MapComponentProps> = ({ geojson, mapUrl }) => {
   const center: [number, number] = [0.01, 0.01];
   const zoom = 15;
   const geoJSONStyle = {
@@ -27,10 +28,12 @@ const MapComponent: React.FC<MapComponentProps> = ({ geojson }) => {
       }}
       zoomControl={true}
     >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-      />
+      {mapUrl && (
+        <TileLayer
+          attribution=''
+          url={mapUrl}
+        />
+      )}
       {geojson && (
         <GeoJSON data={geojson} style={geoJSONStyle} />
       )}

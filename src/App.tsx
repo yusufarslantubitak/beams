@@ -3,8 +3,12 @@ import type { FeatureCollection } from 'geojson';
 import MapComponent from './MapComponent';
 
 const LOCALSTORAGE_KEY = 'beamGeoJSON';
+const MAP_URL_KEY = 'beamMapUrl';
 
-function getInitialGeoJSON(): { geojson: FeatureCollection | null; input: string } {
+function getInitialGeoJSON(): {
+  geojson: FeatureCollection | null;
+  input: string;
+} {
   try {
     const stored = localStorage.getItem(LOCALSTORAGE_KEY);
     if (stored) {
@@ -21,9 +25,18 @@ function App() {
   const initial = getInitialGeoJSON();
   const [geojsonInput, setGeojsonInput] = useState(initial.input);
   const [error, setError] = useState('');
-  const [feedback, setFeedback] = useState(initial.geojson ? 'Restored from storage' : '');
-  const [localGeoJSON, setLocalGeoJSON] = useState<FeatureCollection | null>(initial.geojson);
+  const [feedback, setFeedback] = useState(
+    initial.geojson ? 'Depolamadan geri yüklendi' : '',
+  );
+  const [localGeoJSON, setLocalGeoJSON] = useState<FeatureCollection | null>(
+    initial.geojson,
+  );
   const [panelOpen, setPanelOpen] = useState(true);
+  const [mapUrl, setMapUrl] = useState(
+    () =>
+      localStorage.getItem(MAP_URL_KEY) ??
+      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  );
 
   useEffect(() => {
     if (!feedback) return;
@@ -45,9 +58,9 @@ function App() {
       setLocalGeoJSON(json);
       setGeojsonInput(JSON.stringify(json, null, 2));
       setError('');
-      setFeedback(`Loaded "${file.name}"`);
+      setFeedback(`"${file.name}" yüklendi`);
     } catch {
-      setError('Invalid GeoJSON file');
+      setError('Geçersiz GeoJSON dosyası');
       setFeedback('');
     }
   };
@@ -58,9 +71,9 @@ function App() {
       localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(json));
       setLocalGeoJSON(json);
       setError('');
-      setFeedback('Saved');
+      setFeedback('Kaydedildi');
     } catch {
-      setError('Invalid GeoJSON format');
+      setError('Geçersiz GeoJSON biçimi');
       setFeedback('');
     }
   };
@@ -70,32 +83,59 @@ function App() {
     setGeojsonInput('');
     setLocalGeoJSON(null);
     setError('');
-    setFeedback('Cleared');
+    setFeedback('Temizlendi');
+  };
+
+  const handleMapUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setMapUrl(value);
+    const trimmed = value.trim();
+    if (trimmed) {
+      localStorage.setItem(MAP_URL_KEY, trimmed);
+    } else {
+      localStorage.removeItem(MAP_URL_KEY);
+    }
   };
 
   return (
     <div className='app-layout'>
       <div className='map-fullscreen'>
-        <MapComponent geojson={localGeoJSON} />
+        <MapComponent geojson={localGeoJSON} mapUrl={mapUrl || undefined} />
       </div>
 
-      <div className={`geo-panel ${panelOpen ? 'geo-panel--open' : 'geo-panel--closed'}`}>
+      <div
+        className={`geo-panel ${panelOpen ? 'geo-panel--open' : 'geo-panel--closed'}`}
+      >
         <button
           type='button'
           className='geo-panel-toggle'
           onClick={() => setPanelOpen(!panelOpen)}
-          title={panelOpen ? 'Hide panel' : 'Show panel'}
-          aria-label={panelOpen ? 'Hide panel' : 'Show panel'}
+          title={panelOpen ? 'Paneli gizle' : 'Paneli göster'}
+          aria-label={panelOpen ? 'Paneli gizle' : 'Paneli göster'}
         >
           {panelOpen ? '◀' : '▶'}
         </button>
 
         <div className='geo-panel-content'>
-          <h2 className='geo-panel-title'>GeoJSON Input</h2>
-          <p className='geo-panel-desc'>Paste GeoJSON below or upload a <code>.geojson</code> or <code>.json</code> file. Saved to localStorage.</p>
+          <h2 className='geo-panel-title'>GeoJSON Girişi</h2>
+
+          <label className='geo-input-label'>
+            <span>Harita döşeme URL'si</span>
+            <input
+              type='text'
+              className='geo-map-url-input'
+              value={mapUrl}
+              onChange={handleMapUrlChange}
+              placeholder='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            />
+          </label>
+          <p className='geo-panel-desc'>
+            GeoJSON'u aşağıya yapıştırın veya <code>.geojson</code> ya da{' '}
+            <code>.json</code> dosyası yükleyin.
+          </p>
 
           <details className='geo-format-hint'>
-            <summary>Expected format</summary>
+            <summary>Beklenen biçim</summary>
             <pre className='geo-format-example'>{`{
   "type": "FeatureCollection",
   "features": [           // features[0], features[1], ...
@@ -112,32 +152,44 @@ function App() {
   ]
 }
 
-Polygon: array of rings; each ring = closed loop of [x,y] coords`}</pre>
+Polygon: halka dizisi; her halka = [x,y] koordinatlarından kapalı döngü`}</pre>
           </details>
 
           <label className='geo-input-label'>
-            <span>Paste GeoJSON</span>
+            <span>GeoJSON Yapıştır</span>
             <textarea
               className='geo-textarea'
               value={geojsonInput}
               onChange={handleInputChange}
               placeholder='{ "type": "FeatureCollection", "features": [...] }'
-              rows={30}
+              rows={20}
               spellCheck={false}
             />
           </label>
 
           <div className='geo-actions'>
             <label className='geo-file-label'>
-              <input type='file' accept='.geojson,.json' onChange={handleFileChange} className='geo-file-input' />
-              {' '}
-              Choose file
+              <input
+                type='file'
+                accept='.geojson,.json'
+                onChange={handleFileChange}
+                className='geo-file-input'
+              />{' '}
+              Dosya seç
             </label>
-            <button type='button' className='geo-save-btn' onClick={handleSubmit}>
-              Save
+            <button
+              type='button'
+              className='geo-save-btn'
+              onClick={handleSubmit}
+            >
+              Kaydet
             </button>
-            <button type='button' className='geo-clear-btn' onClick={handleClear}>
-              Clear
+            <button
+              type='button'
+              className='geo-clear-btn'
+              onClick={handleClear}
+            >
+              Temizle
             </button>
           </div>
 
