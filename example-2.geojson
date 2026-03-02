@@ -1,0 +1,69 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "id": "zone-A1", "label": "Bölge A1", "color": "#e74c3c" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[29.0100, 41.0150], [29.0120, 41.0150], [29.0120, 41.0170], [29.0100, 41.0170], [29.0100, 41.0150]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "zone-B2", "label": "Park", "color": "#27ae60" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[29.0130, 41.0155], [29.0150, 41.0155], [29.0150, 41.0175], [29.0130, 41.0175], [29.0130, 41.0155]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "hex-1", "label": "H1", "color": "#3498db" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[29.0080, 41.0180], [29.0090, 41.0185], [29.0090, 41.0195], [29.0080, 41.0200], [29.0070, 41.0195], [29.0070, 41.0185], [29.0080, 41.0180]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "hex-2", "label": "H2", "color": "#9b59b6" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[29.0100, 41.0180], [29.0110, 41.0185], [29.0110, 41.0195], [29.0100, 41.0200], [29.0090, 41.0195], [29.0090, 41.0185], [29.0100, 41.0180]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "triangle-1", "label": "Meydan", "color": "#f39c12" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[29.0140, 41.0180], [29.0160, 41.0180], [29.0150, 41.0200], [29.0140, 41.0180]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "wide-1", "label": "Sanayi", "color": "#1abc9c" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[29.0060, 41.0130], [29.0160, 41.0130], [29.0160, 41.0140], [29.0060, 41.0140], [29.0060, 41.0130]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "zone-C3", "label": "Okul", "color": "#e67e22" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[29.0060, 41.0150], [29.0080, 41.0150], [29.0080, 41.0165], [29.0060, 41.0165], [29.0060, 41.0150]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "zone-D4", "label": "Göl" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[29.0165, 41.0145], [29.0185, 41.0145], [29.0185, 41.0170], [29.0165, 41.0170], [29.0165, 41.0145]]]
+      }
+    }
+  ]
+}
