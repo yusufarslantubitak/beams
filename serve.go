@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/fs"
 	"log"
-	"net"
 	"net/http"
 	"os"
 	"os/exec"
@@ -18,15 +17,6 @@ var distFS embed.FS
 const port = 8765
 
 func getOpenURL() string {
-	// Prefer localhost; on WSL2, Windows browser may need the host IP
-	addrs, err := net.InterfaceAddrs()
-	if err == nil {
-		for _, a := range addrs {
-			if ip, ok := a.(*net.IPNet); ok && !ip.IP.IsLoopback() && ip.IP.To4() != nil {
-				return fmt.Sprintf("http://%s:%d", ip.IP.String(), port)
-			}
-		}
-	}
 	return fmt.Sprintf("http://127.0.0.1:%d", port)
 }
 
@@ -44,9 +34,9 @@ func main() {
 		openBrowser(openURL)
 	}()
 
-	log.Printf("Serving at http://0.0.0.0:%d", port)
+	log.Printf("Serving at http://127.0.0.1:%d", port)
 	log.Print("Press Ctrl+C to stop")
-	if err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf("127.0.0.1:%d", port), nil); err != nil {
 		log.Fatal(err)
 	}
 }
