@@ -1,54 +1,76 @@
 import { useState, useEffect } from 'react';
-import type { FeatureCollection } from 'geojson';
 import { z } from 'zod';
-import { validateGeoJSON } from '../lib/geoJSONSchema';
+import type { FeatureCollection } from '@/lib/geoJSONSchema';
+import { validateGeoJSON } from '@/lib/geoJSONSchema';
 
-export function useGeoJSON(geojsonUrl: string) {
-  const [localGeoJSON, setLocalGeoJSON] = useState<FeatureCollection | null>(null);
+interface UseGeoJSONReturn {
+  localGeoJSON: FeatureCollection | null;
+  error: string;
+  isLoading: boolean;
+}
+
+// Extracted error formatter to keep the main hook logic clean
+const getErrorMessage = (err: unknown): string => {
+  if (err instanceof z.ZodError) {
+    const details = err.issues
+      .slice(0, 3) // Only show the first 3 errors to avoid overwhelming the screen
+      .map((e) => `${e.path.join('.') || 'root'}: ${e.message}`)
+      .join(', ');
+
+    return `Invalid GeoJSON format: ${details}${err.issues.length > 3 ? '...' : ''}`;
+  }
+
+  if (err instanceof Error) {
+    return err.message;
+  }
+
+  return 'An unknown error occurred while loading data';
+};
+
+export function useGeoJSON(geojsonUrl: string): UseGeoJSONReturn {
+  const [localGeoJSON, setLocalGeoJSON] = useState<FeatureCollection | null>(
+    null,
+  );
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
-    const fetchData = async () => {
+
+    const fetchGeoJSON = async () => {
       setIsLoading(true);
+      setError(''); // Clear previous errors at the start of a new fetch
+
       try {
         const response = await fetch(geojsonUrl);
+
         if (!response.ok) {
-          throw new Error(`Veri alınamadı: ${response.statusText} (URL: ${geojsonUrl})`);
+          throw new Error(
+            `Failed to fetch data: ${response.statusText} (URL: ${geojsonUrl})`,
+          );
         }
-        const data = await response.json();
-        
-        // Use Zod to validate the fetched data
+
+        const data: unknown = await response.json();
         const collection = validateGeoJSON(data);
-        
+
         if (isMounted) {
           setLocalGeoJSON(collection);
-          setError(''); // Clear any previous errors
         }
-      } catch (err) {
+      } catch (err: unknown) {
         if (!isMounted) return;
-        
+
         console.error('Validation or Fetch error:', err);
-        if (err instanceof z.ZodError) {
-          // Provide a more readable summary of validation errors
-          const validationError = err as z.ZodError<unknown>;
-          const details = validationError.issues
-            .map(e => `${e.path.join('.') || 'root'}: ${e.message}`)
-            .slice(0, 3) // Only show first 3 errors to avoid overwhelming the screen
-            .join(', ');
-          
-          setError(`Geçersiz GeoJSON formatı: ${details}${validationError.issues.length > 3 ? '...' : ''}`);
-        } else {
-          setError(err instanceof Error ? err.message : 'Veri yüklenirken bilinmeyen bir hata oluştu');
-        }
+        setError(getErrorMessage(err));
       } finally {
         if (isMounted) setIsLoading(false);
       }
     };
 
-    fetchData();
-    return () => { isMounted = false; };
+    fetchGeoJSON();
+
+    return () => {
+      isMounted = false;
+    };
   }, [geojsonUrl]);
 
   return { localGeoJSON, error, isLoading };

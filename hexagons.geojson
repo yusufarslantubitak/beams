@@ -1,0 +1,176 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone-A1",
+        "label": "Bölge A1",
+        "group": "zone",
+        "color": "#e74c3c"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [29.01, 41.015],
+            [29.012, 41.015],
+            [29.012, 41.017],
+            [29.01, 41.017],
+            [29.01, 41.015]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone-B2",
+        "label": "Park",
+        "group": "zone",
+        "color": "#e74c3c"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [29.013, 41.0155],
+            [29.015, 41.0155],
+            [29.015, 41.0175],
+            [29.013, 41.0175],
+            [29.013, 41.0155]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "hex-1",
+        "label": "H1",
+        "group": "hexagon",
+        "color": "#3498db"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [29.008, 41.018],
+            [29.009, 41.0185],
+            [29.009, 41.0195],
+            [29.008, 41.02],
+            [29.007, 41.0195],
+            [29.007, 41.0185],
+            [29.008, 41.018]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "hex-2",
+        "label": "H2",
+        "group": "hexagon",
+        "color": "#9b59b6"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [29.01, 41.018],
+            [29.011, 41.0185],
+            [29.011, 41.0195],
+            [29.01, 41.02],
+            [29.009, 41.0195],
+            [29.009, 41.0185],
+            [29.01, 41.018]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "triangle-1",
+        "label": "Meydan",
+        "group": "landmark",
+        "color": "#f39c12"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [29.014, 41.018],
+            [29.016, 41.018],
+            [29.015, 41.02],
+            [29.014, 41.018]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "wide-1",
+        "label": "Sanayi",
+        "group": "commercial",
+        "color": "#1abc9c"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [29.006, 41.013],
+            [29.016, 41.013],
+            [29.016, 41.014],
+            [29.006, 41.014],
+            [29.006, 41.013]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone-C3",
+        "label": "Okul",
+        "group": "education",
+        "color": "#e67e22"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [29.006, 41.015],
+            [29.008, 41.015],
+            [29.008, 41.0165],
+            [29.006, 41.0165],
+            [29.006, 41.015]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone-D4",
+        "label": "Göl",
+        "group": "natural",
+        "color": "#2980b9"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [29.0165, 41.0145],
+            [29.0185, 41.0145],
+            [29.0185, 41.017],
+            [29.0165, 41.017],
+            [29.0165, 41.0145]
+          ]
+        ]
+      }
+    }
+  ]
+}

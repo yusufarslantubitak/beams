@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import type { FeatureCollection } from 'geojson';
 
 const PositionSchema = z.array(z.number()).min(2);
 
@@ -42,10 +41,17 @@ const GeometrySchema = z.union([
   MultiPolygonSchema,
 ]);
 
+export const FeaturePropertiesSchema = z.object({
+  id: z.string().optional(),
+  label: z.string(),
+  color: z.string().optional().default('#3388ff'),
+  group: z.string().optional(),
+});
+
 export const FeatureSchema = z.object({
   type: z.literal('Feature'),
   geometry: GeometrySchema,
-  properties: z.record(z.string(), z.unknown()).nullable().optional(),
+  properties: FeaturePropertiesSchema,
 });
 
 export const FeatureCollectionSchema = z.object({
@@ -53,13 +59,16 @@ export const FeatureCollectionSchema = z.object({
   features: z.array(FeatureSchema),
 });
 
-/** Validates input as a FeatureCollection using Zod */
+export type FeatureProperties = z.infer<typeof FeaturePropertiesSchema>;
+export type Geometry = z.infer<typeof GeometrySchema>;
+export type Feature = z.infer<typeof FeatureSchema>;
+export type FeatureCollection = z.infer<typeof FeatureCollectionSchema>;
+
 export function validateGeoJSON(input: unknown): FeatureCollection {
-  // If input is an array of features, wrap it
   if (Array.isArray(input)) {
-    const collection = { type: 'FeatureCollection', features: input };
-    return FeatureCollectionSchema.parse(collection) as FeatureCollection;
+    const collection = { type: 'FeatureCollection' as const, features: input };
+    return FeatureCollectionSchema.parse(collection);
   }
-  
-  return FeatureCollectionSchema.parse(input) as FeatureCollection;
+
+  return FeatureCollectionSchema.parse(input);
 }
