@@ -1,14 +1,19 @@
 import React, { useCallback, useState, useMemo } from 'react';
-import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
+import {
+  MapContainer,
+  TileLayer,
+  GeoJSON,
+  useMapEvents,
+  Popup,
+} from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import type { FeatureCollection } from '@/lib/geoJSONSchema';
+import type { FeatureCollection, Feature } from '@/lib/geoJSONSchema';
 import type {
   Feature as GeoJSONFeature,
   Geometry as GeoJSONGeometry,
 } from 'geojson';
 import { getGroupColorMapping, getFeatureColor } from '@/lib/colorMapping';
-import type { Feature } from '@/lib/geoJSONSchema';
 import { Alert, AlertTitle, AlertAction } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { CircleX, X } from 'lucide-react';
@@ -19,7 +24,66 @@ interface MapComponentProps {
   minZoom: number;
   maxZoom: number;
   defaultZoom: number;
+  onFeatureSelect: (value: string) => void;
 }
+
+/**
+ * Simple point-in-polygon check using ray casting algorithm.
+ */
+function isPointInPolygon(
+  point: [number, number],
+  polygon: number[][][],
+): boolean {
+  const x = point[0],
+    y = point[1];
+  let inside = false;
+
+  // We check each ring (outer + holes)
+  for (const ring of polygon) {
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const xi = ring[i][0],
+        yi = ring[i][1];
+      const xj = ring[j][0],
+        yj = ring[j][1];
+
+      const intersect =
+        yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+      if (intersect) inside = !inside;
+    }
+  }
+  return inside;
+}
+
+const MapClickHandler: React.FC<{
+  geojson: FeatureCollection | null | undefined;
+  onFeaturesClick: (latlng: L.LatLng, features: Feature[]) => void;
+}> = ({ geojson, onFeaturesClick }) => {
+  useMapEvents({
+    click(e) {
+      if (!geojson?.features) return;
+
+      const clickedFeatures = geojson.features.filter((feature) => {
+        const { type, coordinates } = feature.geometry;
+        if (type === 'Polygon') {
+          return isPointInPolygon(
+            [e.latlng.lng, e.latlng.lat],
+            coordinates as number[][][],
+          );
+        } else if (type === 'MultiPolygon') {
+          return (coordinates as number[][][][]).some((poly) =>
+            isPointInPolygon([e.latlng.lng, e.latlng.lat], poly),
+          );
+        }
+        return false;
+      });
+
+      if (clickedFeatures.length > 0) {
+        onFeaturesClick(e.latlng, clickedFeatures as Feature[]);
+      }
+    },
+  });
+  return null;
+};
 
 const DEFAULT_COLOR = '#3388ff';
 
@@ -29,6 +93,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   minZoom,
   maxZoom,
   defaultZoom,
+  onFeatureSelect,
 }) => {
   // Always center on 0,0
   const center: [number, number] = [0, 0];
@@ -36,6 +101,10 @@ const MapComponent: React.FC<MapComponentProps> = ({
   const [tileErrorCount, setTileErrorCount] = useState(0);
   const [prevMapUrl, setPrevMapUrl] = useState(mapUrl);
   const [isWarningDismissed, setIsWarningDismissed] = useState(false);
+  const [popupInfo, setPopupInfo] = useState<{
+    latlng: L.LatLng;
+    features: Feature[];
+  } | null>(null);
 
   // Build group-to-color mapping from features
   const groupColorMap = useMemo(() => getGroupColorMapping(geojson), [geojson]);
@@ -67,16 +136,26 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
   const onEachFeature = useCallback(
     (feature: GeoJSONFeature<GeoJSONGeometry>, layer: L.Layer) => {
-      const props = feature.properties;
-      if (props && typeof props === 'object' && 'label' in props) {
-        const label = props.label;
-        if (typeof label === 'string') {
-          layer.bindTooltip(label, {
-            permanent: true,
-            direction: 'center',
-            className: 'geojson-label',
-          });
-        }
+      const props = feature.properties as Feature['properties'];
+      if (props) {
+        const content = `
+          <div class="map-tooltip-content" style="display: flex; flex-direction: column; align-items: center; text-align: center; line-height: 1.1;">
+            <div style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;">
+              <span class="tooltip-key">Machine: </span>${props.machine_no || ''}
+            </div>
+            <div style="font-size: 13px; font-weight: 600; margin-top: 1px;">
+              <span class="tooltip-key">Sat: </span>${props.sat_id || ''}
+            </div>
+            <div style="font-size: 13px; font-weight: 500; opacity: 0.9; margin-top: 1px;">
+              <span class="tooltip-key">Beam/ARFCN: </span>${props.spot_beam || ''}${props.arfcn ? ` • ${props.arfcn}` : ''}
+            </div>
+          </div>
+        `;
+        layer.bindTooltip(content, {
+          permanent: true,
+          direction: 'center',
+          className: 'geojson-label',
+        });
       }
     },
     [],
@@ -116,6 +195,124 @@ const MapComponent: React.FC<MapComponentProps> = ({
             style={featureStyle}
             onEachFeature={onEachFeature}
           />
+        )}
+
+        <MapClickHandler
+          geojson={geojson}
+          onFeaturesClick={(latlng, features) =>
+            setPopupInfo({ latlng, features })
+          }
+        />
+
+        {popupInfo && (
+          <Popup
+            position={popupInfo.latlng}
+            eventHandlers={{
+              remove: () => setPopupInfo(null),
+            }}
+            className='feature-popup'
+          >
+            <div className='flex flex-col gap-2 min-w-45 max-w-65 py-0.5'>
+              <div className='flex items-center border-b border-border/30 pb-1.5 mb-0.5'>
+                <span className='font-bold text-[11px] text-foreground/80 uppercase tracking-tight'>
+                  Features ({popupInfo.features.length})
+                </span>
+              </div>
+
+              <div className='flex flex-col gap-1 max-h-60 overflow-y-auto pr-1 scrollbar-hide'>
+                {popupInfo.features.map((feature, idx) => (
+                  <div
+                    key={feature.properties.id || idx}
+                    onClick={() => {
+                      if (feature.properties.sat_id) {
+                        onFeatureSelect(feature.properties.sat_id);
+                      }
+                    }}
+                    className='flex flex-col gap-0.5 p-1.5 rounded-md hover:bg-primary/5 transition-colors cursor-pointer border border-transparent hover:border-border/20 group/item'
+                  >
+                    {/* Row 1: Color + Sat ID (Default Click) */}
+                    <div className='flex items-center gap-2'>
+                      <div
+                        className='w-2 h-2 rounded-full shrink-0 shadow-sm'
+                        style={{ backgroundColor: feature.properties.color }}
+                      />
+                      <div
+                        className='text-[12px] font-bold text-foreground leading-tight truncate'
+                        title='Sat ID'
+                      >
+                        {feature.properties.sat_id}
+                      </div>
+                    </div>
+
+                    {/* Row 2: Machine No (Clickable) + Spot Beam + ARFCN */}
+                    <div className='flex items-center gap-1.5 pl-4 overflow-hidden mt-0.5'>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (
+                            onFeatureSelect &&
+                            feature.properties.machine_no
+                          ) {
+                            onFeatureSelect(feature.properties.machine_no);
+                          }
+                        }}
+                        className='text-[9px] font-bold text-muted-foreground uppercase tracking-tight shrink-0 hover:text-primary underline decoration-muted-foreground/30 underline-offset-2 hover:decoration-primary/50 transition-colors cursor-pointer'
+                        title='Machine No'
+                      >
+                        {feature.properties.machine_no || 'General'}
+                      </button>
+                      {feature.properties.spot_beam && (
+                        <>
+                          <span className='text-muted-foreground/20 text-[9px]'>
+                            |
+                          </span>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (
+                                onFeatureSelect &&
+                                feature.properties.spot_beam
+                              ) {
+                                onFeatureSelect(feature.properties.spot_beam);
+                              }
+                            }}
+                            className='text-[10px] text-muted-foreground italic truncate opacity-80 hover:text-primary hover:opacity-100 underline decoration-muted-foreground/20 underline-offset-2 hover:decoration-primary/40 transition-colors cursor-pointer'
+                            title='Spot Beam'
+                          >
+                            {feature.properties.spot_beam}
+                          </button>
+                        </>
+                      )}
+                      {feature.properties.arfcn !== undefined && (
+                        <>
+                          <span className='text-muted-foreground/20 text-[9px]'>
+                            |
+                          </span>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (
+                                onFeatureSelect &&
+                                feature.properties.arfcn !== undefined
+                              ) {
+                                onFeatureSelect(
+                                  String(feature.properties.arfcn),
+                                );
+                              }
+                            }}
+                            className='text-[10px] font-mono text-primary/70 font-semibold tracking-tighter hover:text-primary underline decoration-primary/20 underline-offset-2 hover:decoration-primary/50 transition-colors cursor-pointer'
+                            title='ARFCN'
+                          >
+                            {feature.properties.arfcn}
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Popup>
         )}
       </MapContainer>
 

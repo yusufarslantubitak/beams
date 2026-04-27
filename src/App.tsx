@@ -36,7 +36,9 @@ function loadPositions(): CornerPositions {
   try {
     const saved = localStorage.getItem('geojson-viewer-panel-positions');
     if (saved) return JSON.parse(saved);
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
   return { filter: 'tr', legend: 'br' };
 }
 
@@ -55,7 +57,10 @@ function DraggablePanel({ id, corner, onSnap, children }: DraggablePanelProps) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: { point: { x: number; y: number } }) => {
+  const handleDragEnd = (
+    _event: MouseEvent | TouchEvent | PointerEvent,
+    info: { point: { x: number; y: number } },
+  ) => {
     const nearest = getNearestCorner(info.point.x, info.point.y);
 
     if (nearest !== corner) {
@@ -71,7 +76,10 @@ function DraggablePanel({ id, corner, onSnap, children }: DraggablePanelProps) {
   };
 
   return (
-    <div id={`panel-${id}`} className={cn('absolute z-50', CORNER_CLASSES[corner])}>
+    <div
+      id={`panel-${id}`}
+      className={cn('absolute z-50', CORNER_CLASSES[corner])}
+    >
       <motion.div
         drag
         dragMomentum={false}
@@ -83,11 +91,14 @@ function DraggablePanel({ id, corner, onSnap, children }: DraggablePanelProps) {
       >
         {React.Children.map(children, (child) => {
           if (React.isValidElement(child)) {
-            return React.cloneElement(child as React.ReactElement<Record<string, unknown>>, {
-              dragHandleProps: {
-                style: { cursor: 'grab', touchAction: 'none' },
+            return React.cloneElement(
+              child as React.ReactElement<Record<string, unknown>>,
+              {
+                dragHandleProps: {
+                  style: { cursor: 'grab', touchAction: 'none' },
+                },
               },
-            });
+            );
           }
           return child;
         })}
@@ -99,12 +110,18 @@ function DraggablePanel({ id, corner, onSnap, children }: DraggablePanelProps) {
 function App() {
   const { localGeoJSON, error, isLoading } = useGeoJSON(env.VITE_GEOJSON_URL);
   const {
-    selectedLabels,
-    setSelectedLabels,
+    selectedItems,
+    setSelectedItems,
     searchQuery,
-    setSearchQuery,
+    onSearchChange,
+    availableGroups,
     availableLabels,
+    availableBeams,
+    availableArfcns,
+    filteredGroups,
     filteredLabels,
+    filteredBeams,
+    filteredArfcns,
     filteredGeoJSON,
   } = useLabelFilter(localGeoJSON);
 
@@ -132,24 +149,43 @@ function App() {
           minZoom={env.VITE_MIN_ZOOM}
           maxZoom={env.VITE_MAX_ZOOM}
           defaultZoom={env.VITE_DEFAULT_ZOOM}
+          onFeatureSelect={(value) => {
+            if (!selectedItems.includes(value)) {
+              setSelectedItems([...selectedItems, value]);
+            }
+          }}
         />
       </div>
 
       {!isLoading && !error && localGeoJSON && (
         <>
-          <DraggablePanel id='filter' corner={positions.filter} onSnap={handleSnap}>
+          <DraggablePanel
+            id='filter'
+            corner={positions.filter}
+            onSnap={handleSnap}
+          >
             <LabelFilter
-              selectedLabels={selectedLabels}
-              onSelectedLabelsChange={setSelectedLabels}
+              selectedItems={selectedItems}
+              onSelectedItemsChange={setSelectedItems}
               searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              filteredLabels={filteredLabels}
+              onSearchChange={onSearchChange}
+              availableGroups={availableGroups}
               availableLabels={availableLabels}
+              availableBeams={availableBeams}
+              availableArfcns={availableArfcns}
+              filteredGroups={filteredGroups}
+              filteredLabels={filteredLabels}
+              filteredBeams={filteredBeams}
+              filteredArfcns={filteredArfcns}
               corner={positions.filter}
             />
           </DraggablePanel>
 
-          <DraggablePanel id='legend' corner={positions.legend} onSnap={handleSnap}>
+          <DraggablePanel
+            id='legend'
+            corner={positions.legend}
+            onSnap={handleSnap}
+          >
             <Legend geojson={localGeoJSON} corner={positions.legend} />
           </DraggablePanel>
         </>

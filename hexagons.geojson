@@ -5,18 +5,20 @@
       "type": "Feature",
       "properties": {
         "id": "zone-A1",
-        "label": "Bölge A1",
-        "group": "zone",
-        "color": "#e74c3c"
+        "sat_id": "Bölge A1",
+        "machine_no": "zone",
+        "color": "#e74c3c",
+        "spot_beam": "Sector 7G",
+        "arfcn": "101"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [29.01, 41.015],
-            [29.012, 41.015],
-            [29.012, 41.017],
-            [29.01, 41.017],
+            [29.21, 41.015],
+            [29.21, 41.215],
+            [29.01, 41.215],
             [29.01, 41.015]
           ]
         ]
@@ -26,18 +28,20 @@
       "type": "Feature",
       "properties": {
         "id": "zone-B2",
-        "label": "Park",
-        "group": "zone",
-        "color": "#e74c3c"
+        "sat_id": "Park",
+        "machine_no": "zone",
+        "color": "#e74c3c",
+        "spot_beam": "Green Area",
+        "arfcn": "102"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [29.013, 41.0155],
-            [29.015, 41.0155],
-            [29.015, 41.0175],
-            [29.013, 41.0175],
+            [29.213, 41.0155],
+            [29.213, 41.2155],
+            [29.013, 41.2155],
             [29.013, 41.0155]
           ]
         ]
@@ -47,20 +51,22 @@
       "type": "Feature",
       "properties": {
         "id": "hex-1",
-        "label": "H1",
-        "group": "hexagon",
-        "color": "#3498db"
+        "sat_id": "H1",
+        "machine_no": "hexagon",
+        "color": "#3498db",
+        "spot_beam": "Data Node 01",
+        "arfcn": "201"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [29.008, 41.018],
-            [29.009, 41.0185],
-            [29.009, 41.0195],
-            [29.008, 41.02],
-            [29.007, 41.0195],
-            [29.007, 41.0185],
+            [29.108, 41.068],
+            [29.108, 41.168],
+            [29.008, 41.218],
+            [28.908, 41.168],
+            [28.908, 41.068],
             [29.008, 41.018]
           ]
         ]
@@ -70,20 +76,22 @@
       "type": "Feature",
       "properties": {
         "id": "hex-2",
-        "label": "H2",
-        "group": "hexagon",
-        "color": "#9b59b6"
+        "sat_id": "H2",
+        "machine_no": "hexagon",
+        "color": "#9b59b6",
+        "spot_beam": "Data Node 02",
+        "arfcn": "202"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [29.01, 41.018],
-            [29.011, 41.0185],
-            [29.011, 41.0195],
-            [29.01, 41.02],
-            [29.009, 41.0195],
-            [29.009, 41.0185],
+            [29.11, 41.068],
+            [29.11, 41.168],
+            [29.01, 41.218],
+            [28.91, 41.168],
+            [28.91, 41.068],
             [29.01, 41.018]
           ]
         ]
@@ -93,81 +101,20 @@
       "type": "Feature",
       "properties": {
         "id": "triangle-1",
-        "label": "Meydan",
-        "group": "landmark",
-        "color": "#f39c12"
+        "sat_id": "Meydan",
+        "machine_no": "landmark",
+        "color": "#f39c12",
+        "spot_beam": "Public Square",
+        "arfcn": "301"
       },
       "geometry": {
         "type": "Polygon",
         "coordinates": [
           [
             [29.014, 41.018],
-            [29.016, 41.018],
-            [29.015, 41.02],
+            [29.214, 41.018],
+            [29.114, 41.218],
             [29.014, 41.018]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "wide-1",
-        "label": "Sanayi",
-        "group": "commercial",
-        "color": "#1abc9c"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [29.006, 41.013],
-            [29.016, 41.013],
-            [29.016, 41.014],
-            [29.006, 41.014],
-            [29.006, 41.013]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "zone-C3",
-        "label": "Okul",
-        "group": "education",
-        "color": "#e67e22"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [29.006, 41.015],
-            [29.008, 41.015],
-            [29.008, 41.0165],
-            [29.006, 41.0165],
-            [29.006, 41.015]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "id": "zone-D4",
-        "label": "Göl",
-        "group": "natural",
-        "color": "#2980b9"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [29.0165, 41.0145],
-            [29.0185, 41.0145],
-            [29.0185, 41.017],
-            [29.0165, 41.017],
-            [29.0165, 41.0145]
           ]
         ]
       }

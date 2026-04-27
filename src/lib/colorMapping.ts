@@ -10,9 +10,9 @@ export function getGroupColorMapping(
   }
 
   for (const feature of geojson.features) {
-    const { group, color } = feature.properties;
-    if (group && !groupColorMap.has(group)) {
-      groupColorMap.set(group, color);
+    const { machine_no, color } = feature.properties;
+    if (machine_no && !groupColorMap.has(machine_no)) {
+      groupColorMap.set(machine_no, color);
     }
   }
 
@@ -28,10 +28,10 @@ export function getFeatureColor(
     return defaultColor;
   }
 
-  const { group, color } = feature.properties;
+  const { machine_no, color } = feature.properties;
 
-  if (group) {
-    return groupColorMap.get(group) ?? defaultColor;
+  if (machine_no) {
+    return groupColorMap.get(machine_no) ?? defaultColor;
   }
 
   return color;

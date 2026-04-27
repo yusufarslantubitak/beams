@@ -43,9 +43,11 @@ const GeometrySchema = z.union([
 
 export const FeaturePropertiesSchema = z.object({
   id: z.string().optional(),
-  label: z.string(),
+  sat_id: z.string().optional(),
   color: z.string().optional().default('#3388ff'),
-  group: z.string().optional(),
+  machine_no: z.string().optional(),
+  spot_beam: z.string().optional(),
+  arfcn: z.string().optional(),
 });
 
 export const FeatureSchema = z.object({
