@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, useMotionValue, animate } from 'framer-motion';
 import { useGeoJSON } from '@/hooks/useGeoJSON';
+import { useMarkers } from '@/hooks/useMarkers';
 import { useLabelFilter } from '@/hooks/useLabelFilter';
 import MapComponent from '@/components/MapComponent';
 import { LoadingOverlay } from '@/components/LoadingOverlay';
@@ -108,7 +109,8 @@ function DraggablePanel({ id, corner, onSnap, children }: DraggablePanelProps) {
 }
 
 function App() {
-  const { localGeoJSON, error, isLoading } = useGeoJSON(env.VITE_GEOJSON_URL);
+  const { localGeoJSON, error, isLoading } = useGeoJSON(env.VITE_HEXAGONS_GEOJSON_URL);
+  const { markersGeoJSON } = useMarkers(env.VITE_MARKERS_GEOJSON_URL);
   const {
     selectedItems,
     setSelectedItems,
@@ -145,6 +147,7 @@ function App() {
       <div className='absolute inset-0 z-0'>
         <MapComponent
           geojson={filteredGeoJSON}
+          markers={markersGeoJSON}
           mapUrl={env.VITE_MAP_TILE_URL}
           minZoom={env.VITE_MIN_ZOOM}
           maxZoom={env.VITE_MAX_ZOOM}

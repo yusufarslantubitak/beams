@@ -1,14 +1,23 @@
-import React, { useCallback, useState, useMemo } from 'react';
+import React, {
+  useCallback,
+  useState,
+  useMemo,
+  useEffect,
+  useRef,
+} from 'react';
 import {
   MapContainer,
   TileLayer,
   GeoJSON,
+  useMap,
   useMapEvents,
   Popup,
 } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { FeatureCollection, Feature } from '@/lib/geoJSONSchema';
+import type { MarkerFeatureCollection } from '@/lib/markerSchema';
+import { MapMarker } from '@/components/MapMarker';
 import type {
   Feature as GeoJSONFeature,
   Geometry as GeoJSONGeometry,
@@ -16,10 +25,11 @@ import type {
 import { getGroupColorMapping, getFeatureColor } from '@/lib/colorMapping';
 import { Alert, AlertTitle, AlertAction } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { CircleX, X } from 'lucide-react';
+import { CircleX, X, Plus, Minus } from 'lucide-react';
 
 interface MapComponentProps {
   geojson?: FeatureCollection | null;
+  markers?: MarkerFeatureCollection | null;
   mapUrl: string;
   minZoom: number;
   maxZoom: number;
@@ -85,18 +95,130 @@ const MapClickHandler: React.FC<{
   return null;
 };
 
+function applyZoomClass(map: L.Map) {
+  const container = map?.getContainer?.();
+  if (!container) return;
+  const zoom = Math.round(map.getZoom());
+  const cleanClasses = container.className
+    .split(' ')
+    .filter((c) => !c.startsWith('zoom-'));
+  cleanClasses.push(`zoom-${zoom}`);
+  container.className = cleanClasses.join(' ');
+}
+
+const ZoomHandler: React.FC = () => {
+  const map = useMapEvents({
+    zoom(e) {
+      applyZoomClass(e.target);
+    },
+    zoomend(e) {
+      applyZoomClass(e.target);
+    },
+  });
+
+  React.useEffect(() => {
+    applyZoomClass(map);
+  }, [map]);
+
+  return null;
+};
+
+interface ZoomControlWithLevelProps {
+  minZoom?: number;
+  maxZoom?: number;
+}
+
+const ZoomControlWithLevel: React.FC<ZoomControlWithLevelProps> = ({
+  minZoom,
+  maxZoom,
+}) => {
+  const map = useMap();
+  const [zoom, setZoom] = useState<number>(() => Math.round(map.getZoom()));
+  const controlRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (map.zoomControl) {
+      try {
+        map.removeControl(map.zoomControl);
+      } catch {
+        /* ignore */
+      }
+    }
+    if (controlRef.current) {
+      L.DomEvent.disableClickPropagation(controlRef.current);
+      L.DomEvent.disableScrollPropagation(controlRef.current);
+    }
+  }, [map]);
+
+  useEffect(() => {
+    const updateZoom = () => {
+      setZoom(Math.round(map.getZoom()));
+    };
+    map.on('zoom', updateZoom);
+    map.on('zoomend', updateZoom);
+    return () => {
+      map.off('zoom', updateZoom);
+      map.off('zoomend', updateZoom);
+    };
+  }, [map]);
+
+  const canZoomIn = maxZoom === undefined || zoom < maxZoom;
+  const canZoomOut = minZoom === undefined || zoom > minZoom;
+
+  return (
+    <div className='leaflet-top leaflet-left'>
+      <div
+        ref={controlRef}
+        className='leaflet-control m-6 flex flex-col items-center bg-white/60 hover:bg-white/70 backdrop-blur-lg border border-white/40 shadow-lg rounded-xl overflow-hidden transition-all select-none'
+      >
+        <button
+          type='button'
+          onClick={() => map.zoomIn()}
+          disabled={!canZoomIn}
+          className='w-7 h-7 flex items-center justify-center text-slate-700 hover:text-slate-950 hover:bg-white/60 active:scale-95 transition-all disabled:opacity-25 disabled:pointer-events-none cursor-pointer'
+          title='Zoom in'
+          aria-label='Zoom in'
+        >
+          <Plus className='w-3.5 h-3.5 stroke-[2.5]' />
+        </button>
+
+        <div
+          className='w-full py-0.5 px-1.5 flex flex-col items-center justify-center border-y border-white/30 bg-white/30 text-center select-none min-w-7'
+          title={`Zoom level ${zoom}`}
+        >
+          <span className='font-mono text-[11px] font-bold text-slate-800 tracking-tight leading-tight'>
+            {zoom}
+          </span>
+        </div>
+
+        <button
+          type='button'
+          onClick={() => map.zoomOut()}
+          disabled={!canZoomOut}
+          className='w-7 h-7 flex items-center justify-center text-slate-700 hover:text-slate-950 hover:bg-white/60 active:scale-95 transition-all disabled:opacity-25 disabled:pointer-events-none cursor-pointer'
+          title='Zoom out'
+          aria-label='Zoom out'
+        >
+          <Minus className='w-3.5 h-3.5 stroke-[2.5]' />
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const DEFAULT_COLOR = '#3388ff';
 
 const MapComponent: React.FC<MapComponentProps> = ({
   geojson,
+  markers,
   mapUrl,
   minZoom,
   maxZoom,
   defaultZoom,
   onFeatureSelect,
 }) => {
-  // Always center on 0,0
-  const center: [number, number] = [0, 0];
+  // Center on Europe
+  const center: [number, number] = [50, 10];
 
   const [tileErrorCount, setTileErrorCount] = useState(0);
   const [prevMapUrl, setPrevMapUrl] = useState(mapUrl);
@@ -138,16 +260,42 @@ const MapComponent: React.FC<MapComponentProps> = ({
     (feature: GeoJSONFeature<GeoJSONGeometry>, layer: L.Layer) => {
       const props = feature.properties as Feature['properties'];
       if (props) {
+        if (feature.geometry.type === 'Polygon') {
+          const coords = feature.geometry.coordinates[0];
+          if (coords && coords.length > 0) {
+            let sumLng = 0;
+            let sumLat = 0;
+            const numPoints =
+              coords.length > 1 &&
+              coords[0][0] === coords[coords.length - 1][0] &&
+              coords[0][1] === coords[coords.length - 1][1]
+                ? coords.length - 1
+                : coords.length;
+            for (let i = 0; i < numPoints; i++) {
+              sumLng += coords[i][0];
+              sumLat += coords[i][1];
+            }
+            const centerLat = sumLat / numPoints;
+            const centerLng = sumLng / numPoints;
+            const centerLatLng = L.latLng(centerLat, centerLng);
+            (layer as L.Polygon).getCenter = () => centerLatLng;
+          }
+        }
+
+        const machine = props.machine_no || '';
+        const sat = props.sat_id || '';
+        const beam = props.spot_beam || '';
+        const arfcn = props.arfcn ? ` • ${props.arfcn}` : '';
         const content = `
-          <div class="map-tooltip-content" style="display: flex; flex-direction: column; align-items: center; text-align: center; line-height: 1.1;">
-            <div style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;">
-              <span class="tooltip-key">Machine: </span>${props.machine_no || ''}
+          <div class="map-tooltip-content">
+            <div class="map-tooltip-title">
+              <span class="tooltip-key">Machine: </span>${machine}
             </div>
-            <div style="font-size: 13px; font-weight: 600; margin-top: 1px;">
-              <span class="tooltip-key">Sat: </span>${props.sat_id || ''}
+            <div class="map-tooltip-sub">
+              <span class="tooltip-key">Sat: </span>${sat}
             </div>
-            <div style="font-size: 13px; font-weight: 500; opacity: 0.9; margin-top: 1px;">
-              <span class="tooltip-key">Beam/ARFCN: </span>${props.spot_beam || ''}${props.arfcn ? ` • ${props.arfcn}` : ''}
+            <div class="map-tooltip-meta">
+              <span class="tooltip-key">Beam/ARFCN: </span>${beam}${arfcn}
             </div>
           </div>
         `;
@@ -163,7 +311,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
   return (
     <div className='relative w-full h-full'>
-      <style>{`.leaflet-control-attribution { display: none !important; }`}</style>
+      <style>{`.leaflet-control-attribution, .leaflet-control-zoom { display: none !important; }`}</style>
       <MapContainer
         center={center}
         zoom={defaultZoom}
@@ -174,8 +322,9 @@ const MapComponent: React.FC<MapComponentProps> = ({
           width: '100%',
           zIndex: 0,
         }}
-        zoomControl={true}
+        zoomControl={false}
       >
+        <ZoomControlWithLevel minZoom={minZoom} maxZoom={maxZoom} />
         {mapUrl && (
           <TileLayer
             attribution=''
@@ -196,6 +345,16 @@ const MapComponent: React.FC<MapComponentProps> = ({
             onEachFeature={onEachFeature}
           />
         )}
+
+        {markers?.features &&
+          markers.features.map((feature, idx) => (
+            <MapMarker
+              key={feature.properties.id || `marker-${idx}`}
+              feature={feature}
+            />
+          ))}
+
+        <ZoomHandler />
 
         <MapClickHandler
           geojson={geojson}

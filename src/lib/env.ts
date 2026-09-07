@@ -2,7 +2,8 @@ import { z } from 'zod';
 
 const EnvSchema = z.object({
   VITE_MAP_TILE_URL: z.string().min(1, 'VITE_MAP_TILE_URL is required'),
-  VITE_GEOJSON_URL: z.string().url('VITE_GEOJSON_URL must be a valid URL'),
+  VITE_HEXAGONS_GEOJSON_URL: z.string().url('VITE_HEXAGONS_GEOJSON_URL must be a valid URL'),
+  VITE_MARKERS_GEOJSON_URL: z.string().url('VITE_MARKERS_GEOJSON_URL must be a valid URL'),
   VITE_MIN_ZOOM: z.coerce.number().int().min(0).max(22).default(2),
   VITE_MAX_ZOOM: z.coerce.number().int().min(0).max(22).default(18),
   VITE_DEFAULT_ZOOM: z.coerce.number().int().min(0).max(22).default(4),

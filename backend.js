@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PORT = 8006;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 8006;
 
 const server = http.createServer((req, res) => {
   // Enable CORS
@@ -23,8 +23,22 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  if (req.url === '/map/hexagons.geojson') {
+  const urlPath = req.url?.split('?')[0] || '';
+
+  if (urlPath === '/map/hexagons.geojson' || urlPath === '/hexagons.geojson') {
     const filePath = path.join(__dirname, 'hexagons.geojson');
+    
+    fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'File not found' }));
+        return;
+      }
+      res.writeHead(200);
+      res.end(data);
+    });
+  } else if (urlPath === '/map/markers.geojson' || urlPath === '/markers.geojson') {
+    const filePath = path.join(__dirname, 'markers.geojson');
     
     fs.readFile(filePath, 'utf8', (err, data) => {
       if (err) {
@@ -44,6 +58,7 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, '127.0.0.1', () => {
   console.log(`GeoJSON server running at http://127.0.0.1:${PORT}`);
   console.log(`Serving hexagons.geojson at http://127.0.0.1:${PORT}/map/hexagons.geojson`);
+  console.log(`Serving markers.geojson at http://127.0.0.1:${PORT}/map/markers.geojson`);
   console.log('Press Ctrl+C to stop');
 });
 

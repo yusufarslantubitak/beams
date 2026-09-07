@@ -1,0 +1,327 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-london",
+        "title": "London - Central Control",
+        "color": "#3b82f6",
+        "icon": "TowerControl"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1276,
+          51.5074
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-paris",
+        "title": "Paris - Gateway Alpha",
+        "description": "Capital of France; major European space coordination center, high-bandwidth satellite uplink, and research network nexus.",
+        "color": "#8b5cf6",
+        "icon": "Radio"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3522,
+          48.8566
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-berlin",
+        "title": "Berlin - Compute Core",
+        "description": "Capital of Germany; Central European quantum computing testbed, edge processing farm, and telemetry routing array.",
+        "color": "#10b981",
+        "icon": "Cpu"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.405,
+          52.52
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-rome",
+        "title": "Rome - Mediterranean Post",
+        "description": "Capital of Italy; Southern European aerospace tracking station, coastal telemetry monitor, and disaster prevention dispatch.",
+        "color": "#f59e0b",
+        "icon": "Satellite"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.4964,
+          41.9028
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-madrid",
+        "title": "Madrid - Iberian Gateway",
+        "description": "Capital of Spain; Iberian communications trunk line, European deep space network link, and solar array substation.",
+        "color": "#ef4444",
+        "icon": "Wifi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7038,
+          40.4168
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-amsterdam",
+        "title": "Amsterdam - Data Exchange",
+        "description": "Capital of the Netherlands; global internet exchange (AMS-IX) core, transatlantic subsea terminal, and low-latency cloud cluster.",
+        "color": "#06b6d4",
+        "icon": "Server"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.9041,
+          52.3676
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-brussels",
+        "title": "Brussels - HQ Command",
+        "description": "Capital of Belgium; European institutional data headquarters, secure diplomatic link terminal, and crisis response registry.",
+        "color": "#ec4899",
+        "icon": "Network"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.3517,
+          50.8503
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-vienna",
+        "title": "Vienna - Alpine Nexus",
+        "description": "Capital of Austria; Central European international agency coordination point and atomic energy telemetry outpost.",
+        "color": "#6366f1",
+        "icon": "Database"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.3738,
+          48.2082
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-warsaw",
+        "title": "Warsaw - Eastern Hub",
+        "description": "Capital of Poland; Eastern border radar early-warning network, dynamic spectrum monitor, and broadband transmission node.",
+        "color": "#14b8a6",
+        "icon": "Activity"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          21.0122,
+          52.2297
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-prague",
+        "title": "Prague - Security Fort",
+        "description": "Capital of the Czech Republic; cyber defense command, cryptographic key distribution point, and aerospace navigation beacon.",
+        "color": "#eab308",
+        "icon": "Shield"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          14.4378,
+          50.0755
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-stockholm",
+        "title": "Stockholm - Nordic Relay",
+        "description": "Capital of Sweden; Scandinavian primary polar orbit tracking array, zero-emission green data center, and 6G experimental cell.",
+        "color": "#38bdf8",
+        "icon": "Globe"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.0686,
+          59.3293
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-oslo",
+        "title": "Oslo - North Link",
+        "description": "Capital of Norway; Arctic subsea communications monitor, maritime energy network telemetry center, and polar satellite ground station.",
+        "color": "#a855f7",
+        "icon": "Zap"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          10.7522,
+          59.9139
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-copenhagen",
+        "title": "Copenhagen - Baltic Straits",
+        "description": "Capital of Denmark; maritime navigation radar outpost, wind farm telemetry collector, and Nordic broadband exchange.",
+        "color": "#f97316",
+        "icon": "RadioTower"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.5683,
+          55.6761
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-helsinki",
+        "title": "Helsinki - Arctic Shield",
+        "description": "Capital of Finland; high-latitude satellite communication array, sub-zero hardware testbed, and aurora electromagnetic sensor.",
+        "color": "#22c55e",
+        "icon": "Antenna"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          24.9384,
+          60.1699
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-dublin",
+        "title": "Dublin - Atlantic Relay",
+        "description": "Capital of Ireland; transatlantic undersea cable hub, international cloud region anchor, and renewable telemetry base.",
+        "color": "#059669",
+        "icon": "Share2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -6.2603,
+          53.3498
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-lisbon",
+        "title": "Lisbon - Coastal Array",
+        "description": "Capital of Portugal; South Atlantic optical fiber gateway, deep-sea exploration monitor, and oceanic weather beacon.",
+        "color": "#f43f5e",
+        "icon": "Compass"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -9.1393,
+          38.7223
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-athens",
+        "title": "Athens - Aegean Dispatch",
+        "description": "Capital of Greece; Eastern Mediterranean maritime satellite station, seismic warning telemetry network, and solar relay.",
+        "color": "#e11d48",
+        "icon": "Sun"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          23.7275,
+          37.9838
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-budapest",
+        "title": "Budapest - Danube Node",
+        "description": "Capital of Hungary; Danube river valley digital microwave relay, railway telemetry controller, and regional routing facility.",
+        "color": "#84cc16",
+        "icon": "Layers"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.0402,
+          47.4979
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-bern",
+        "title": "Bern - Alpine Fort",
+        "description": "Federal City of Switzerland; subterranean high-security communications vault, atomic clock synchronization node, and Alpine beacon.",
+        "color": "#dc2626",
+        "icon": "Shield"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          7.4474,
+          46.948
+        ]
+      }
+    }
+  ]
+}
