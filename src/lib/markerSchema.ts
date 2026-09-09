@@ -17,6 +17,10 @@ export const MarkerPropertiesSchema = z
     'background-color': z.string().optional(),
     'remote-site': z.string().optional(),
     remote_site: z.string().optional(),
+    'no-cluster': z.boolean().optional(),
+    no_cluster: z.boolean().optional(),
+    'no-group': z.boolean().optional(),
+    no_group: z.boolean().optional(),
   })
   .loose();
 
@@ -31,6 +35,20 @@ export function getMarkerRemoteSite(properties?: Record<string, unknown> | null)
   if (!properties) return undefined;
   return (properties['remote-site'] as string) || (properties['remote_site'] as string) || undefined;
 }
+
+export function isMarkerUnclustered(properties?: Record<string, unknown> | null): boolean {
+  if (!properties) return false;
+  return Boolean(
+    properties['no-cluster'] === true ||
+    properties['no_cluster'] === true ||
+    properties['no-group'] === true ||
+    properties['no_group'] === true ||
+    properties['disable-grouping'] === true ||
+    properties['disable_grouping'] === true
+  );
+}
+
+export const isMarkerUngrouped = isMarkerUnclustered;
 
 export const MarkerFeatureSchema = z.object({
   type: z.literal('Feature'),

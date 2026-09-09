@@ -60,9 +60,10 @@
 | `id`               | `string` | No       | —                          | Identifier displayed in popup                   |
 | `remote-site`      | `string` | No       | —                          | Remote site code displayed next to ID in popup  |
 | `description`      | `string` | No       | `""`                       | Text description displayed in popup body        |
-| `color`            | `string` | No       | `"#3b82f6"`                | Hex or CSS color for marker icon and border     |
-| `background-color` | `string` | No       | `"rgba(15, 23, 42, 0.92)"` | Hex, RGB, or CSS color for marker background    |
-| `icon`             | `string` | No       | `"MapPin"`                 | Lucide icon name in PascalCase (see note below) |
+| `color`            | `string`  | No       | `"#3b82f6"`                | Hex or CSS color for marker icon and border     |
+| `background-color` | `string`  | No       | `"rgba(15, 23, 42, 0.92)"` | Hex, RGB, or CSS color for marker background    |
+| `icon`             | `string`  | No       | `"MapPin"`                 | Lucide icon name in PascalCase (see note below) |
+| `no-cluster`       | `boolean` | No       | `false`                    | When `true`, disables clustering for this marker and renders it as an independent standalone pin |
 
 > **Icon Reference**: Choose icons from [lucide.dev/icons](https://lucide.dev/icons). Convert the icon name from **kebab-case** to **PascalCase** (e.g., `tower-control` → `TowerControl`, `radio-tower` → `RadioTower`, `cpu` → `Cpu`, `server` → `Server`).
 
