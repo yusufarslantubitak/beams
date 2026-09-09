@@ -125,7 +125,16 @@ function App() {
     filteredBeams,
     filteredArfcns,
     filteredGeoJSON,
-  } = useLabelFilter(localGeoJSON);
+    selectedMarkerSites,
+    setSelectedMarkerSites,
+    markerSearchQuery,
+    onMarkerSearchChange,
+    availableRemoteSites,
+    filteredRemoteSites,
+    filteredMarkersGeoJSON,
+    activeTab,
+    setActiveTab,
+  } = useLabelFilter(localGeoJSON, markersGeoJSON);
 
   const [positions, setPositions] = useState<CornerPositions>(loadPositions);
 
@@ -147,7 +156,7 @@ function App() {
       <div className='absolute inset-0 z-0'>
         <MapComponent
           geojson={filteredGeoJSON}
-          markers={markersGeoJSON}
+          markers={filteredMarkersGeoJSON}
           mapUrl={env.VITE_MAP_TILE_URL}
           minZoom={env.VITE_MIN_ZOOM}
           maxZoom={env.VITE_MAX_ZOOM}
@@ -156,6 +165,12 @@ function App() {
             if (!selectedItems.includes(value)) {
               setSelectedItems([...selectedItems, value]);
             }
+          }}
+          onMarkerSelect={(site) => {
+            if (!selectedMarkerSites.includes(site)) {
+              setSelectedMarkerSites([...selectedMarkerSites, site]);
+            }
+            setActiveTab('markers');
           }}
         />
       </div>
@@ -180,6 +195,14 @@ function App() {
               filteredLabels={filteredLabels}
               filteredBeams={filteredBeams}
               filteredArfcns={filteredArfcns}
+              selectedMarkerSites={selectedMarkerSites}
+              onSelectedMarkerSitesChange={setSelectedMarkerSites}
+              markerSearchQuery={markerSearchQuery}
+              onMarkerSearchChange={onMarkerSearchChange}
+              availableRemoteSites={availableRemoteSites}
+              filteredRemoteSites={filteredRemoteSites}
+              activeTab={activeTab}
+              onActiveTabChange={setActiveTab}
               corner={positions.filter}
             />
           </DraggablePanel>

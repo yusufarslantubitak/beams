@@ -35,6 +35,7 @@ interface MapComponentProps {
   maxZoom: number;
   defaultZoom: number;
   onFeatureSelect: (value: string) => void;
+  onMarkerSelect?: (site: string) => void;
 }
 
 /**
@@ -228,6 +229,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   maxZoom,
   defaultZoom,
   onFeatureSelect,
+  onMarkerSelect,
 }) => {
   // Center on Europe
   const center: [number, number] = [50, 10];
@@ -576,7 +578,10 @@ const MapComponent: React.FC<MapComponentProps> = ({
             className='feature-popup marker-popup'
           >
             {markerPopupInfo.markers.length === 1 ? (
-              <MarkerTooltipCard feature={markerPopupInfo.markers[0]} />
+              <MarkerTooltipCard
+                feature={markerPopupInfo.markers[0]}
+                onSelectMarkerSite={onMarkerSelect}
+              />
             ) : (
               <div className='flex flex-col min-w-56 max-w-76 py-0.5'>
                 <div className='flex items-center justify-between pb-1 mb-1.5 border-b border-border/20 text-muted-foreground'>
@@ -594,7 +599,10 @@ const MapComponent: React.FC<MapComponentProps> = ({
                       key={feature.properties.id || idx}
                       className={idx > 0 ? 'pt-2.5' : 'pb-1'}
                     >
-                      <MarkerTooltipCard feature={feature} />
+                      <MarkerTooltipCard
+                        feature={feature}
+                        onSelectMarkerSite={onMarkerSelect}
+                      />
                     </div>
                   ))}
                 </div>

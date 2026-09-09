@@ -8,7 +8,7 @@ import { storage } from '@/lib/storage';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardTitle, CardContent } from '@/components/ui/card';
-import { List, X } from 'lucide-react';
+import { List, X, Hexagon, MapPin } from 'lucide-react';
 
 interface LegendProps {
   geojson: FeatureCollection | null;
@@ -165,8 +165,9 @@ export const Legend: React.FC<LegendProps> = ({
             {groupsList.length > 0 && (
               <div className='flex flex-col gap-0.5'>
                 {uniqueMarkers.length > 0 && (
-                  <div className='text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/80 px-2 py-0.5'>
-                    Beams
+                  <div className='flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/80 px-2 py-0.5'>
+                    <Hexagon className='w-2.5 h-2.5 opacity-60' />
+                    <span>Beams</span>
                   </div>
                 )}
                 {groupsList.map((item) => (
@@ -192,8 +193,9 @@ export const Legend: React.FC<LegendProps> = ({
             {uniqueMarkers.length > 0 && (
               <div className='flex flex-col gap-0.5'>
                 {groupsList.length > 0 && (
-                  <div className='text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/80 px-2 pt-1 pb-0.5 border-t border-border/40'>
-                    Markers
+                  <div className='flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/80 px-2 pt-1 pb-0.5 border-t border-border/40'>
+                    <MapPin className='w-2.5 h-2.5 opacity-60' />
+                    <span>Markers</span>
                   </div>
                 )}
                 {uniqueMarkers.map((marker) => {

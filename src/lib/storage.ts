@@ -3,12 +3,16 @@ import { z } from 'zod';
 const SelectedLabelsSchema = z.array(z.string());
 const SearchQuerySchema = z.string();
 const BooleanFlagSchema = z.boolean();
+const FilterTabSchema = z.enum(['beams', 'markers']);
 
 const KEYS = {
   selectedLabels: 'geojson-viewer-selected-labels',
   searchQuery: 'geojson-viewer-search-query',
   labelFilterExpanded: 'label-filter-expanded',
   legendExpanded: 'geojson-viewer-legend-expanded',
+  selectedMarkerSites: 'geojson-viewer-selected-marker-sites',
+  filterActiveTab: 'geojson-viewer-filter-active-tab',
+  markerSearchQuery: 'geojson-viewer-marker-search-query',
 } as const;
 
 function readStorage<T>(key: string, schema: z.ZodType<T>, fallback: T): T {
@@ -59,4 +63,22 @@ export const storage = {
 
   setLegendExpanded: (expanded: boolean): void =>
     writeStorage(KEYS.legendExpanded, expanded),
+
+  getSelectedMarkerSites: (): string[] =>
+    readStorage(KEYS.selectedMarkerSites, SelectedLabelsSchema, []),
+
+  setSelectedMarkerSites: (sites: string[]): void =>
+    writeStorage(KEYS.selectedMarkerSites, sites),
+
+  getMarkerSearchQuery: (): string =>
+    readStorage(KEYS.markerSearchQuery, SearchQuerySchema, ''),
+
+  setMarkerSearchQuery: (query: string): void =>
+    writeStorage(KEYS.markerSearchQuery, query),
+
+  getFilterActiveTab: (): 'beams' | 'markers' =>
+    readStorage(KEYS.filterActiveTab, FilterTabSchema, 'beams'),
+
+  setFilterActiveTab: (tab: 'beams' | 'markers'): void =>
+    writeStorage(KEYS.filterActiveTab, tab),
 } as const;

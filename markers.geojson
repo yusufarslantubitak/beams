@@ -4,12 +4,13 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-london",
+        "id": "LON-01",
         "title": "London - Central Control",
         "description": "Primary European operations hub and network flight control center.",
         "color": "#60a5fa",
         "background-color": "#1e3a8a",
-        "icon": "TowerControl"
+        "icon": "TowerControl",
+        "remote-site": "RS-100"
       },
       "geometry": {
         "type": "Point",
@@ -22,12 +23,13 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-london-backup",
+        "id": "LON-02",
         "title": "London - Quantum Telemetry Vault",
         "description": "Secondary secure quantum cryptographic vault and high-frequency orbital exchange node.",
         "color": "#f43f5e",
         "background-color": "#881337",
-        "icon": "Database"
+        "icon": "Database",
+        "remote-site": "RS-100"
       },
       "geometry": {
         "type": "Point",
@@ -40,12 +42,13 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-london-relay",
+        "id": "LON-03",
         "title": "London - Thames Fiber Landing",
         "description": "Sub-channel optical routing nexus and redundant trans-oceanic gateway.",
         "color": "#38bdf8",
         "background-color": "#0c4a6e",
-        "icon": "Radio"
+        "icon": "Radio",
+        "remote-site": "RS-100"
       },
       "geometry": {
         "type": "Point",
@@ -58,12 +61,13 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-paris",
+        "id": "PAR-01",
         "title": "Paris - Gateway Alpha",
         "description": "Capital of France; major European space coordination center, high-bandwidth satellite uplink, and research network nexus.",
         "color": "#a78bfa",
         "background-color": "#4c1d95",
-        "icon": "Radio"
+        "icon": "Radio",
+        "remote-site": "RS-200"
       },
       "geometry": {
         "type": "Point",
@@ -76,12 +80,13 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-paris-sub",
+        "id": "PAR-02",
         "title": "Paris - Orbital Relay B",
         "description": "Secondary orbital downlink receiver and high-capacity laser communications terminal.",
         "color": "#06b6d4",
         "background-color": "#164e63",
-        "icon": "Radio"
+        "icon": "Radio",
+        "remote-site": "RS-200"
       },
       "geometry": {
         "type": "Point",
@@ -94,12 +99,13 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-berlin",
+        "id": "BER-01",
         "title": "Berlin - Compute Core",
         "description": "Capital of Germany; Central European quantum computing testbed, edge processing farm, and telemetry routing array.",
         "color": "#10b981",
         "background-color": "#064e3b",
-        "icon": "Cpu"
+        "icon": "Cpu",
+        "remote-site": "RS-300"
       },
       "geometry": {
         "type": "Point",
@@ -112,12 +118,13 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-berlin-backup",
+        "id": "BER-02",
         "title": "Berlin - Quantum Sensor Array",
         "description": "Secondary sub-nanosecond quantum telemetry receiver and auxiliary cryptographic node.",
         "color": "#f59e0b",
         "background-color": "#78350f",
-        "icon": "Zap"
+        "icon": "Zap",
+        "remote-site": "RS-300"
       },
       "geometry": {
         "type": "Point",
@@ -130,12 +137,13 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-rome",
+        "id": "ROM-01",
         "title": "Rome - Mediterranean Post",
         "description": "Capital of Italy; Southern European aerospace tracking station, coastal telemetry monitor, and disaster prevention dispatch.",
         "color": "#f59e0b",
         "background-color": "#78350f",
-        "icon": "Satellite"
+        "icon": "Satellite",
+        "remote-site": "RS-400"
       },
       "geometry": {
         "type": "Point",
@@ -148,12 +156,13 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-rome-aerospace",
+        "id": "ROM-02",
         "title": "Rome - Aerospace Telemetry Core",
         "description": "Mediterranean high-altitude sensor station and deep-space telemetry relay.",
         "color": "#ec4899",
         "background-color": "#831843",
-        "icon": "Satellite"
+        "icon": "Satellite",
+        "remote-site": "RS-400"
       },
       "geometry": {
         "type": "Point",
@@ -166,12 +175,13 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-madrid",
+        "id": "MAD-01",
         "title": "Madrid - Iberian Gateway",
         "description": "Capital of Spain; Iberian communications trunk line, European deep space network link, and solar array substation.",
         "color": "#ef4444",
         "background-color": "#7f1d1d",
-        "icon": "Wifi"
+        "icon": "Wifi",
+        "remote-site": "RS-500"
       },
       "geometry": {
         "type": "Point",
@@ -184,12 +194,13 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-madrid-uplink",
+        "id": "MAD-02",
         "title": "Madrid - Deep Space Uplink",
         "description": "Robotic dish array terminal and solar telemetry distribution link.",
         "color": "#14b8a6",
         "background-color": "#134e4a",
-        "icon": "Radio"
+        "icon": "Radio",
+        "remote-site": "RS-500"
       },
       "geometry": {
         "type": "Point",
@@ -202,11 +213,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-amsterdam",
+        "id": "AMS-01",
         "title": "Amsterdam - Data Exchange",
         "description": "Capital of the Netherlands; global internet exchange (AMS-IX) core, transatlantic subsea terminal, and low-latency cloud cluster.",
         "color": "#06b6d4",
-        "icon": "Server"
+        "icon": "Server",
+        "remote-site": "RS-600"
       },
       "geometry": {
         "type": "Point",
@@ -219,12 +231,13 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-amsterdam-sea",
+        "id": "AMS-02",
         "title": "Amsterdam - North Sea Landing",
         "description": "Direct underwater hyper-speed link to Scandinavian networks.",
         "color": "#0ea5e9",
         "background-color": "#082f49",
-        "icon": "Activity"
+        "icon": "Activity",
+        "remote-site": "RS-600"
       },
       "geometry": {
         "type": "Point",
@@ -237,11 +250,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-brussels",
+        "id": "BRU-01",
         "title": "Brussels - HQ Command",
         "description": "Capital of Belgium; European institutional data headquarters, secure diplomatic link terminal, and crisis response registry.",
         "color": "#ec4899",
-        "icon": "Network"
+        "icon": "Network",
+        "remote-site": "RS-700"
       },
       "geometry": {
         "type": "Point",
@@ -254,11 +268,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-vienna",
+        "id": "VIE-01",
         "title": "Vienna - Alpine Nexus",
         "description": "Capital of Austria; Central European international agency coordination point and atomic energy telemetry outpost.",
         "color": "#6366f1",
-        "icon": "Database"
+        "icon": "Database",
+        "remote-site": "RS-800"
       },
       "geometry": {
         "type": "Point",
@@ -271,12 +286,13 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-vienna-crypt",
+        "id": "VIE-02",
         "title": "Vienna - Cryptographic Node",
         "description": "Central European atomic timestamp facility and diplomatic security terminal.",
         "color": "#8b5cf6",
         "background-color": "#3b0764",
-        "icon": "Shield"
+        "icon": "Shield",
+        "remote-site": "RS-800"
       },
       "geometry": {
         "type": "Point",
@@ -289,11 +305,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-warsaw",
+        "id": "WAW-01",
         "title": "Warsaw - Eastern Hub",
         "description": "Capital of Poland; Eastern border radar early-warning network, dynamic spectrum monitor, and broadband transmission node.",
         "color": "#14b8a6",
-        "icon": "Activity"
+        "icon": "Activity",
+        "remote-site": "RS-900"
       },
       "geometry": {
         "type": "Point",
@@ -306,11 +323,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-prague",
+        "id": "PRG-01",
         "title": "Prague - Security Fort",
         "description": "Capital of the Czech Republic; cyber defense command, cryptographic key distribution point, and aerospace navigation beacon.",
         "color": "#eab308",
-        "icon": "Shield"
+        "icon": "Shield",
+        "remote-site": "RS-1000"
       },
       "geometry": {
         "type": "Point",
@@ -323,11 +341,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-stockholm",
+        "id": "STO-01",
         "title": "Stockholm - Nordic Relay",
         "description": "Capital of Sweden; Scandinavian primary polar orbit tracking array, zero-emission green data center, and 6G experimental cell.",
         "color": "#38bdf8",
-        "icon": "Globe"
+        "icon": "Globe",
+        "remote-site": "RS-1100"
       },
       "geometry": {
         "type": "Point",
@@ -340,12 +359,13 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-stockholm-polar",
+        "id": "STO-02",
         "title": "Stockholm - Arctic Orbital Link",
         "description": "Polar orbit downlink telemetry and Nordic green compute node.",
         "color": "#22c55e",
         "background-color": "#14532d",
-        "icon": "Globe"
+        "icon": "Globe",
+        "remote-site": "RS-1100"
       },
       "geometry": {
         "type": "Point",
@@ -358,11 +378,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-oslo",
+        "id": "OSL-01",
         "title": "Oslo - North Link",
         "description": "Capital of Norway; Arctic subsea communications monitor, maritime energy network telemetry center, and polar satellite ground station.",
         "color": "#a855f7",
-        "icon": "Zap"
+        "icon": "Zap",
+        "remote-site": "RS-1200"
       },
       "geometry": {
         "type": "Point",
@@ -375,11 +396,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-copenhagen",
+        "id": "CPH-01",
         "title": "Copenhagen - Baltic Straits",
         "description": "Capital of Denmark; maritime navigation radar outpost, wind farm telemetry collector, and Nordic broadband exchange.",
         "color": "#f97316",
-        "icon": "RadioTower"
+        "icon": "RadioTower",
+        "remote-site": "RS-1300"
       },
       "geometry": {
         "type": "Point",
@@ -392,11 +414,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-helsinki",
+        "id": "HEL-01",
         "title": "Helsinki - Arctic Shield",
         "description": "Capital of Finland; high-latitude satellite communication array, sub-zero hardware testbed, and aurora electromagnetic sensor.",
         "color": "#22c55e",
-        "icon": "Antenna"
+        "icon": "Antenna",
+        "remote-site": "RS-1400"
       },
       "geometry": {
         "type": "Point",
@@ -409,11 +432,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-dublin",
+        "id": "DUB-01",
         "title": "Dublin - Atlantic Relay",
         "description": "Capital of Ireland; transatlantic undersea cable hub, international cloud region anchor, and renewable telemetry base.",
         "color": "#059669",
-        "icon": "Share2"
+        "icon": "Share2",
+        "remote-site": "RS-1500"
       },
       "geometry": {
         "type": "Point",
@@ -426,11 +450,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-lisbon",
+        "id": "LIS-01",
         "title": "Lisbon - Coastal Array",
         "description": "Capital of Portugal; South Atlantic optical fiber gateway, deep-sea exploration monitor, and oceanic weather beacon.",
         "color": "#f43f5e",
-        "icon": "Compass"
+        "icon": "Compass",
+        "remote-site": "RS-1600"
       },
       "geometry": {
         "type": "Point",
@@ -443,11 +468,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-athens",
+        "id": "ATH-01",
         "title": "Athens - Aegean Dispatch",
         "description": "Capital of Greece; Eastern Mediterranean maritime satellite station, seismic warning telemetry network, and solar relay.",
         "color": "#e11d48",
-        "icon": "Sun"
+        "icon": "Sun",
+        "remote-site": "RS-1700"
       },
       "geometry": {
         "type": "Point",
@@ -460,11 +486,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-budapest",
+        "id": "BUD-01",
         "title": "Budapest - Danube Node",
         "description": "Capital of Hungary; Danube river valley digital microwave relay, railway telemetry controller, and regional routing facility.",
         "color": "#84cc16",
-        "icon": "Layers"
+        "icon": "Layers",
+        "remote-site": "RS-1800"
       },
       "geometry": {
         "type": "Point",
@@ -477,11 +504,12 @@
     {
       "type": "Feature",
       "properties": {
-        "id": "cap-bern",
+        "id": "BRN-01",
         "title": "Bern - Alpine Fort",
         "description": "Federal City of Switzerland; subterranean high-security communications vault, atomic clock synchronization node, and Alpine beacon.",
         "color": "#dc2626",
-        "icon": "Shield"
+        "icon": "Shield",
+        "remote-site": "RS-1900"
       },
       "geometry": {
         "type": "Point",

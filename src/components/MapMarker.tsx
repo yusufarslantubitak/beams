@@ -2,7 +2,10 @@ import React, { useMemo } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import { MapPin } from 'lucide-react';
 import type { MarkerFeature } from '@/lib/markerSchema';
-import { getMarkerBackgroundColor } from '@/lib/markerSchema';
+import {
+  getMarkerBackgroundColor,
+  getMarkerRemoteSite,
+} from '@/lib/markerSchema';
 import { createMarkerIcon, getLucideIcon } from '@/lib/markerIcons';
 
 interface DynamicMarkerIconProps {
@@ -19,14 +22,17 @@ const DynamicMarkerIcon: React.FC<DynamicMarkerIconProps> = ({
 
 export interface MarkerTooltipCardProps {
   feature: MarkerFeature;
+  onSelectMarkerSite?: (site: string) => void;
 }
 
 export const MarkerTooltipCard: React.FC<MarkerTooltipCardProps> = ({
   feature,
+  onSelectMarkerSite,
 }) => {
   const { geometry, properties } = feature;
   const [lng, lat] = geometry.coordinates;
   const bgColor = getMarkerBackgroundColor(properties);
+  const remoteSite = getMarkerRemoteSite(properties);
 
   return (
     <div className='flex flex-col min-w-52 max-w-72'>
@@ -46,10 +52,26 @@ export const MarkerTooltipCard: React.FC<MarkerTooltipCardProps> = ({
           <span className='font-bold text-xs text-foreground leading-snug'>
             {properties.title}
           </span>
-          {properties.id && (
-            <span className='text-[9px] font-mono uppercase tracking-wider text-muted-foreground'>
-              ID: {properties.id}
-            </span>
+          {(properties.id || remoteSite) && (
+            <div className='flex items-center gap-1 text-[9px] font-mono uppercase tracking-wider text-muted-foreground mt-0.5'>
+              {properties.id && <span>ID: {properties.id}</span>}
+              {properties.id && remoteSite && (
+                <span className='text-muted-foreground/40'>,</span>
+              )}
+              {remoteSite && (
+                <button
+                  type='button'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectMarkerSite?.(remoteSite);
+                  }}
+                  className='font-bold hover:text-primary underline decoration-muted-foreground/30 underline-offset-2 hover:decoration-primary/50 transition-colors cursor-pointer'
+                  title={`Filter by Remote Site ${remoteSite}`}
+                >
+                  {remoteSite}
+                </button>
+              )}
+            </div>
           )}
         </div>
       </div>
@@ -80,12 +102,14 @@ interface MapMarkerProps {
   feature: MarkerFeature;
   badgeCount?: number;
   onClick?: (feature: MarkerFeature, e: L.LeafletMouseEvent) => void;
+  onSelectMarkerSite?: (site: string) => void;
 }
 
 export const MapMarker: React.FC<MapMarkerProps> = ({
   feature,
   badgeCount,
   onClick,
+  onSelectMarkerSite,
 }) => {
   const { geometry, properties } = feature;
   // GeoJSON coordinates are [longitude, latitude]
@@ -115,7 +139,10 @@ export const MapMarker: React.FC<MapMarkerProps> = ({
     >
       {!onClick && (
         <Popup className='feature-popup marker-popup'>
-          <MarkerTooltipCard feature={feature} />
+          <MarkerTooltipCard
+            feature={feature}
+            onSelectMarkerSite={onSelectMarkerSite}
+          />
         </Popup>
       )}
     </Marker>

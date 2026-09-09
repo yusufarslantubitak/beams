@@ -1,14 +1,22 @@
 import { useMemo, useState } from 'react';
 import type { FeatureCollection } from '@/lib/geoJSONSchema';
 import { FeatureCollectionSchema } from '@/lib/geoJSONSchema';
+import type { MarkerFeatureCollection } from '@/lib/markerSchema';
+import { getMarkerRemoteSite } from '@/lib/markerSchema';
 import { storage } from '@/lib/storage';
 
-interface FilterGroup {
+export interface FilterGroup {
   name: string;
   color: string;
 }
 
+export interface RemoteSiteOption {
+  site: string;
+  markerCount: number;
+}
+
 interface UseLabelFilterReturn {
+  // Beams / Hexagons filters
   selectedItems: string[];
   setSelectedItems: (items: string[]) => void;
   searchQuery: string;
@@ -22,11 +30,36 @@ interface UseLabelFilterReturn {
   filteredBeams: string[];
   filteredArfcns: string[];
   filteredGeoJSON: FeatureCollection | null;
+
+  // Markers filters
+  selectedMarkerSites: string[];
+  setSelectedMarkerSites: (sites: string[]) => void;
+  markerSearchQuery: string;
+  onMarkerSearchChange: (query: string) => void;
+  availableRemoteSites: RemoteSiteOption[];
+  filteredRemoteSites: RemoteSiteOption[];
+  filteredMarkersGeoJSON: MarkerFeatureCollection | null;
+
+  // Active Tab
+  activeTab: 'beams' | 'markers';
+  setActiveTab: (tab: 'beams' | 'markers') => void;
 }
 
 export function useLabelFilter(
   geojson: FeatureCollection | null | undefined,
+  markersGeoJSON?: MarkerFeatureCollection | null | undefined,
 ): UseLabelFilterReturn {
+  // --- Active Tab State ---
+  const [activeTab, setActiveTabState] = useState<'beams' | 'markers'>(() =>
+    storage.getFilterActiveTab(),
+  );
+
+  const setActiveTab = (tab: 'beams' | 'markers') => {
+    setActiveTabState(tab);
+    storage.setFilterActiveTab(tab);
+  };
+
+  // --- Beams Filters State ---
   const [selectedItems, setSelectedItemsState] = useState<string[]>(() =>
     storage.getSelectedLabels(),
   );
@@ -44,6 +77,26 @@ export function useLabelFilter(
     storage.setSelectedLabels(items);
   };
 
+  // --- Marker Remote-Site Filters State ---
+  const [selectedMarkerSites, setSelectedMarkerSitesState] = useState<string[]>(
+    () => storage.getSelectedMarkerSites(),
+  );
+  const [markerSearchQuery, setMarkerSearchQueryState] = useState(() =>
+    storage.getMarkerSearchQuery(),
+  );
+
+  const setMarkerSearchQuery = (query: string) => {
+    setMarkerSearchQueryState(query);
+    storage.setMarkerSearchQuery(query);
+  };
+
+  const setSelectedMarkerSites = (sites: string[]) => {
+    const unique = Array.from(new Set(sites.map((s) => s.trim()).filter(Boolean)));
+    setSelectedMarkerSitesState(unique);
+    storage.setSelectedMarkerSites(unique);
+  };
+
+  // --- Beams Data Extraction ---
   const { availableGroups, availableLabels, availableBeams, availableArfcns } = useMemo(() => {
     if (!geojson?.features) return { availableGroups: [], availableLabels: [], availableBeams: [], availableArfcns: [] };
 
@@ -171,7 +224,57 @@ export function useLabelFilter(
     return result.success ? result.data : null;
   }, [geojson, selectedItems, availableGroups, availableLabels, availableBeams, availableArfcns]);
 
+  // --- Markers Remote-Site Extraction ---
+  const availableRemoteSites: RemoteSiteOption[] = useMemo(() => {
+    if (!markersGeoJSON?.features) return [];
+    const uniqueSites = new Set<string>();
+    const siteCountMap = new Map<string, number>();
+
+    for (const feature of markersGeoJSON.features) {
+      const site = getMarkerRemoteSite(feature.properties);
+      if (!site) continue;
+      const cleanSite = site.trim();
+      if (!cleanSite) continue;
+
+      uniqueSites.add(cleanSite);
+      siteCountMap.set(cleanSite, (siteCountMap.get(cleanSite) || 0) + 1);
+    }
+
+    return Array.from(uniqueSites)
+      .sort((a, b) =>
+        a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }),
+      )
+      .map((site) => ({
+        site,
+        markerCount: siteCountMap.get(site) || 1,
+      }));
+  }, [markersGeoJSON]);
+
+  const filteredRemoteSites = useMemo(() => {
+    if (!markerSearchQuery) return availableRemoteSites;
+    const lower = markerSearchQuery.toLowerCase().trim();
+    return availableRemoteSites.filter((item) =>
+      item.site.toLowerCase().includes(lower),
+    );
+  }, [availableRemoteSites, markerSearchQuery]);
+
+  const filteredMarkersGeoJSON = useMemo((): MarkerFeatureCollection | null => {
+    if (!markersGeoJSON) return null;
+    if (selectedMarkerSites.length === 0) return markersGeoJSON;
+
+    const filteredFeatures = markersGeoJSON.features.filter((feature) => {
+      const site = getMarkerRemoteSite(feature.properties);
+      return site && selectedMarkerSites.includes(site);
+    });
+
+    return {
+      type: 'FeatureCollection',
+      features: filteredFeatures,
+    };
+  }, [markersGeoJSON, selectedMarkerSites]);
+
   return {
+    // Beams
     selectedItems,
     setSelectedItems,
     searchQuery,
@@ -185,5 +288,18 @@ export function useLabelFilter(
     filteredBeams,
     filteredArfcns,
     filteredGeoJSON,
+
+    // Markers
+    selectedMarkerSites,
+    setSelectedMarkerSites,
+    markerSearchQuery,
+    onMarkerSearchChange: setMarkerSearchQuery,
+    availableRemoteSites,
+    filteredRemoteSites,
+    filteredMarkersGeoJSON,
+
+    // Active Tab
+    activeTab,
+    setActiveTab,
   };
 }

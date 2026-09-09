@@ -58,6 +58,7 @@
 | :----------------- | :------- | :------- | :------------------------- | :---------------------------------------------- |
 | `title`            | `string` | **Yes**  | —                          | Title displayed in popup                        |
 | `id`               | `string` | No       | —                          | Identifier displayed in popup                   |
+| `remote-site`      | `string` | No       | —                          | Remote site code displayed next to ID in popup  |
 | `description`      | `string` | No       | `""`                       | Text description displayed in popup body        |
 | `color`            | `string` | No       | `"#3b82f6"`                | Hex or CSS color for marker icon and border     |
 | `background-color` | `string` | No       | `"rgba(15, 23, 42, 0.92)"` | Hex, RGB, or CSS color for marker background    |
@@ -78,8 +79,9 @@
         "coordinates": [10.0, 50.0]
       },
       "properties": {
-        "id": "marker-01",
+        "id": "BER-01",
         "title": "Facility Name",
+        "remote-site": "RS-301",
         "description": "Description text displayed inside popup.",
         "color": "#10b981",
         "background-color": "#064e3b",
