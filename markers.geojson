@@ -6,8 +6,46 @@
       "properties": {
         "id": "cap-london",
         "title": "London - Central Control",
-        "color": "#3b82f6",
+        "description": "Primary European operations hub and network flight control center.",
+        "color": "#60a5fa",
+        "background-color": "#1e3a8a",
         "icon": "TowerControl"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1276,
+          51.5074
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-london-backup",
+        "title": "London - Quantum Telemetry Vault",
+        "description": "Secondary secure quantum cryptographic vault and high-frequency orbital exchange node.",
+        "color": "#f43f5e",
+        "background-color": "#881337",
+        "icon": "Database"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1276,
+          51.5074
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-london-relay",
+        "title": "London - Thames Fiber Landing",
+        "description": "Sub-channel optical routing nexus and redundant trans-oceanic gateway.",
+        "color": "#38bdf8",
+        "background-color": "#0c4a6e",
+        "icon": "Radio"
       },
       "geometry": {
         "type": "Point",
@@ -23,7 +61,26 @@
         "id": "cap-paris",
         "title": "Paris - Gateway Alpha",
         "description": "Capital of France; major European space coordination center, high-bandwidth satellite uplink, and research network nexus.",
-        "color": "#8b5cf6",
+        "color": "#a78bfa",
+        "background-color": "#4c1d95",
+        "icon": "Radio"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.3522,
+          48.8566
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-paris-sub",
+        "title": "Paris - Orbital Relay B",
+        "description": "Secondary orbital downlink receiver and high-capacity laser communications terminal.",
+        "color": "#06b6d4",
+        "background-color": "#164e63",
         "icon": "Radio"
       },
       "geometry": {
@@ -41,7 +98,26 @@
         "title": "Berlin - Compute Core",
         "description": "Capital of Germany; Central European quantum computing testbed, edge processing farm, and telemetry routing array.",
         "color": "#10b981",
+        "background-color": "#064e3b",
         "icon": "Cpu"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          13.405,
+          52.52
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-berlin-backup",
+        "title": "Berlin - Quantum Sensor Array",
+        "description": "Secondary sub-nanosecond quantum telemetry receiver and auxiliary cryptographic node.",
+        "color": "#f59e0b",
+        "background-color": "#78350f",
+        "icon": "Zap"
       },
       "geometry": {
         "type": "Point",
@@ -58,6 +134,25 @@
         "title": "Rome - Mediterranean Post",
         "description": "Capital of Italy; Southern European aerospace tracking station, coastal telemetry monitor, and disaster prevention dispatch.",
         "color": "#f59e0b",
+        "background-color": "#78350f",
+        "icon": "Satellite"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          12.4964,
+          41.9028
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-rome-aerospace",
+        "title": "Rome - Aerospace Telemetry Core",
+        "description": "Mediterranean high-altitude sensor station and deep-space telemetry relay.",
+        "color": "#ec4899",
+        "background-color": "#831843",
         "icon": "Satellite"
       },
       "geometry": {
@@ -75,7 +170,26 @@
         "title": "Madrid - Iberian Gateway",
         "description": "Capital of Spain; Iberian communications trunk line, European deep space network link, and solar array substation.",
         "color": "#ef4444",
+        "background-color": "#7f1d1d",
         "icon": "Wifi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.7038,
+          40.4168
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-madrid-uplink",
+        "title": "Madrid - Deep Space Uplink",
+        "description": "Robotic dish array terminal and solar telemetry distribution link.",
+        "color": "#14b8a6",
+        "background-color": "#134e4a",
+        "icon": "Radio"
       },
       "geometry": {
         "type": "Point",
@@ -93,6 +207,24 @@
         "description": "Capital of the Netherlands; global internet exchange (AMS-IX) core, transatlantic subsea terminal, and low-latency cloud cluster.",
         "color": "#06b6d4",
         "icon": "Server"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.9041,
+          52.3676
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-amsterdam-sea",
+        "title": "Amsterdam - North Sea Landing",
+        "description": "Direct underwater hyper-speed link to Scandinavian networks.",
+        "color": "#0ea5e9",
+        "background-color": "#082f49",
+        "icon": "Activity"
       },
       "geometry": {
         "type": "Point",
@@ -127,6 +259,24 @@
         "description": "Capital of Austria; Central European international agency coordination point and atomic energy telemetry outpost.",
         "color": "#6366f1",
         "icon": "Database"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          16.3738,
+          48.2082
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-vienna-crypt",
+        "title": "Vienna - Cryptographic Node",
+        "description": "Central European atomic timestamp facility and diplomatic security terminal.",
+        "color": "#8b5cf6",
+        "background-color": "#3b0764",
+        "icon": "Shield"
       },
       "geometry": {
         "type": "Point",
@@ -177,6 +327,24 @@
         "title": "Stockholm - Nordic Relay",
         "description": "Capital of Sweden; Scandinavian primary polar orbit tracking array, zero-emission green data center, and 6G experimental cell.",
         "color": "#38bdf8",
+        "icon": "Globe"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.0686,
+          59.3293
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "cap-stockholm-polar",
+        "title": "Stockholm - Arctic Orbital Link",
+        "description": "Polar orbit downlink telemetry and Nordic green compute node.",
+        "color": "#22c55e",
+        "background-color": "#14532d",
         "icon": "Globe"
       },
       "geometry": {

@@ -54,13 +54,14 @@
 
 ### Schema
 
-| Property      | Type     | Required | Default     | Description                                     |
-| :------------ | :------- | :------- | :---------- | :---------------------------------------------- |
-| `title`       | `string` | **Yes**  | —           | Title displayed in popup                        |
-| `id`          | `string` | No       | —           | Identifier displayed in popup                   |
-| `description` | `string` | No       | `""`        | Text description displayed in popup body        |
-| `color`       | `string` | No       | `"#3b82f6"` | Hex color for marker icon and accents           |
-| `icon`        | `string` | No       | `"MapPin"`  | Lucide icon name in PascalCase (see note below) |
+| Property           | Type     | Required | Default                    | Description                                     |
+| :----------------- | :------- | :------- | :------------------------- | :---------------------------------------------- |
+| `title`            | `string` | **Yes**  | —                          | Title displayed in popup                        |
+| `id`               | `string` | No       | —                          | Identifier displayed in popup                   |
+| `description`      | `string` | No       | `""`                       | Text description displayed in popup body        |
+| `color`            | `string` | No       | `"#3b82f6"`                | Hex or CSS color for marker icon and border     |
+| `background-color` | `string` | No       | `"rgba(15, 23, 42, 0.92)"` | Hex, RGB, or CSS color for marker background    |
+| `icon`             | `string` | No       | `"MapPin"`                 | Lucide icon name in PascalCase (see note below) |
 
 > **Icon Reference**: Choose icons from [lucide.dev/icons](https://lucide.dev/icons). Convert the icon name from **kebab-case** to **PascalCase** (e.g., `tower-control` → `TowerControl`, `radio-tower` → `RadioTower`, `cpu` → `Cpu`, `server` → `Server`).
 
@@ -81,6 +82,7 @@
         "title": "Facility Name",
         "description": "Description text displayed inside popup.",
         "color": "#10b981",
+        "background-color": "#064e3b",
         "icon": "Radio"
       }
     }

@@ -189,7 +189,11 @@ function App() {
             corner={positions.legend}
             onSnap={handleSnap}
           >
-            <Legend geojson={localGeoJSON} corner={positions.legend} />
+            <Legend
+              geojson={localGeoJSON}
+              markers={markersGeoJSON}
+              corner={positions.legend}
+            />
           </DraggablePanel>
         </>
       )}

@@ -95,34 +95,69 @@ export function iconNodeToSvg(
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">${children}</svg>`;
 }
 
+import { DEFAULT_MARKER_BG_COLOR } from '@/lib/markerSchema';
+
 /**
- * Creates a Leaflet DivIcon that renders ONLY the Lucide icon,
- * styled with the feature's accent color.
+ * Creates a Leaflet DivIcon that renders the Lucide icon,
+ * styled with the feature's accent color and custom background-color.
  */
 export function createMarkerIcon(
   iconName?: string,
   color: string = '#3b82f6',
+  backgroundColor: string = DEFAULT_MARKER_BG_COLOR,
+  badgeCount?: number,
 ): L.DivIcon {
   const IconComponent = getLucideIcon(iconName);
   const iconNode = getIconNode(IconComponent);
   const iconSvg = iconNodeToSvg(iconNode, color, 15);
 
+  const hasBadge = typeof badgeCount === 'number' && badgeCount > 1;
+
   return L.divIcon({
     className: 'custom-lucide-marker',
     html: `
       <div class="marker-icon-wrapper" style="
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
         width: 28px;
         height: 28px;
         border-radius: 9999px;
-        background: rgba(15, 23, 42, 0.92);
+        background: ${backgroundColor};
         border: 1.5px solid ${color};
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         cursor: pointer;
       ">
         ${iconSvg}
+        ${
+          hasBadge
+            ? `
+          <span class="marker-badge-count" style="
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            min-width: 14px;
+            height: 14px;
+            padding: 0 3px;
+            border-radius: 9999px;
+            background: rgba(30, 41, 59, 0.9);
+            color: #cbd5e1;
+            font-size: 8.5px;
+            font-weight: 600;
+            font-family: ui-monospace, monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            line-height: 1;
+            pointer-events: none;
+            z-index: 10;
+          ">${badgeCount}</span>
+        `
+            : ''
+        }
       </div>
     `,
     iconSize: [28, 28],

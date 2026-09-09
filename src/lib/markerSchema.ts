@@ -14,8 +14,16 @@ export const MarkerPropertiesSchema = z
     description: z.string().optional().default(''),
     color: z.string().optional().default('#3b82f6'),
     icon: z.string().optional().default('MapPin'),
+    'background-color': z.string().optional(),
   })
   .passthrough();
+
+export const DEFAULT_MARKER_BG_COLOR = 'rgba(15, 23, 42, 0.92)';
+
+export function getMarkerBackgroundColor(properties?: Record<string, unknown> | null): string {
+  if (!properties) return DEFAULT_MARKER_BG_COLOR;
+  return (properties['background-color'] as string) || DEFAULT_MARKER_BG_COLOR;
+}
 
 export const MarkerFeatureSchema = z.object({
   type: z.literal('Feature'),

@@ -16,8 +16,8 @@ import {
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { FeatureCollection, Feature } from '@/lib/geoJSONSchema';
-import type { MarkerFeatureCollection } from '@/lib/markerSchema';
-import { MapMarker } from '@/components/MapMarker';
+import type { MarkerFeature, MarkerFeatureCollection } from '@/lib/markerSchema';
+import { MapMarker, MarkerTooltipCard } from '@/components/MapMarker';
 import type {
   Feature as GeoJSONFeature,
   Geometry as GeoJSONGeometry,
@@ -64,12 +64,24 @@ function isPointInPolygon(
   return inside;
 }
 
+const MapInstanceCapture: React.FC<{
+  onMapReady: (map: L.Map) => void;
+}> = ({ onMapReady }) => {
+  const map = useMap();
+  useEffect(() => {
+    onMapReady(map);
+  }, [map, onMapReady]);
+  return null;
+};
+
 const MapClickHandler: React.FC<{
   geojson: FeatureCollection | null | undefined;
   onFeaturesClick: (latlng: L.LatLng, features: Feature[]) => void;
-}> = ({ geojson, onFeaturesClick }) => {
+  onMapClick?: () => void;
+}> = ({ geojson, onFeaturesClick, onMapClick }) => {
   useMapEvents({
     click(e) {
+      onMapClick?.();
       if (!geojson?.features) return;
 
       const clickedFeatures = geojson.features.filter((feature) => {
@@ -223,10 +235,71 @@ const MapComponent: React.FC<MapComponentProps> = ({
   const [tileErrorCount, setTileErrorCount] = useState(0);
   const [prevMapUrl, setPrevMapUrl] = useState(mapUrl);
   const [isWarningDismissed, setIsWarningDismissed] = useState(false);
+  const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
   const [popupInfo, setPopupInfo] = useState<{
     latlng: L.LatLng;
     features: Feature[];
   } | null>(null);
+  const [markerPopupInfo, setMarkerPopupInfo] = useState<{
+    latlng: L.LatLngExpression;
+    markers: MarkerFeature[];
+  } | null>(null);
+
+  const handleMarkerClick = useCallback(
+    (feature: MarkerFeature, e: L.LeafletMouseEvent) => {
+      if (!mapInstance || !markers?.features) return;
+
+      // Close polygon feature popup if open
+      setPopupInfo(null);
+
+      const [featLng, featLat] = feature.geometry.coordinates;
+      const clickedMarkerPoint = mapInstance.latLngToContainerPoint([
+        featLat,
+        featLng,
+      ]);
+
+      // Marker icon is 28x28px (radius 14px). Two icons visually overlap
+      // when their centers are within 20px of each other.
+      // Only include markers that directly overlap with the clicked marker.
+      const OVERLAP_RADIUS_PX = 20;
+
+      const overlapping = markers.features.filter((m) => {
+        if (m.properties.id && m.properties.id === feature.properties.id) {
+          return true;
+        }
+        const [mLng, mLat] = m.geometry.coordinates;
+        const mPoint = mapInstance.latLngToContainerPoint([mLat, mLng]);
+        const distToClickedMarker = clickedMarkerPoint.distanceTo(mPoint);
+        return distToClickedMarker <= OVERLAP_RADIUS_PX;
+      });
+
+      // Ensure clicked feature is first, remaining ordered by proximity to clicked marker
+      overlapping.sort((a, b) => {
+        if (a.properties.id === feature.properties.id) return -1;
+        if (b.properties.id === feature.properties.id) return 1;
+        const [aLng, aLat] = a.geometry.coordinates;
+        const [bLng, bLat] = b.geometry.coordinates;
+        const distA = clickedMarkerPoint.distanceTo(
+          mapInstance.latLngToContainerPoint([aLat, aLng]),
+        );
+        const distB = clickedMarkerPoint.distanceTo(
+          mapInstance.latLngToContainerPoint([bLat, bLng]),
+        );
+        return distA - distB;
+      });
+
+      // Use exact mouse click coordinates on the map rather than marker coordinates
+      const clickLatLng = e.originalEvent
+        ? mapInstance.mouseEventToLatLng(e.originalEvent)
+        : (e.latlng || [featLat, featLng]);
+
+      setMarkerPopupInfo({
+        latlng: clickLatLng,
+        markers: overlapping,
+      });
+    },
+    [mapInstance, markers],
+  );
 
   // Build group-to-color mapping from features
   const groupColorMap = useMemo(() => getGroupColorMapping(geojson), [geojson]);
@@ -325,6 +398,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
         zoomControl={false}
       >
         <ZoomControlWithLevel minZoom={minZoom} maxZoom={maxZoom} />
+        <MapInstanceCapture onMapReady={setMapInstance} />
         {mapUrl && (
           <TileLayer
             attribution=''
@@ -347,20 +421,38 @@ const MapComponent: React.FC<MapComponentProps> = ({
         )}
 
         {markers?.features &&
-          markers.features.map((feature, idx) => (
-            <MapMarker
-              key={feature.properties.id || `marker-${idx}`}
-              feature={feature}
-            />
-          ))}
+          (() => {
+            // Count occurrences of exact same [lng, lat] coordinates
+            const counts = new Map<string, number>();
+            for (const f of markers.features) {
+              const [fLng, fLat] = f.geometry.coordinates;
+              const key = `${fLng},${fLat}`;
+              counts.set(key, (counts.get(key) || 0) + 1);
+            }
+
+            return markers.features.map((feature, idx) => {
+              const [lng, lat] = feature.geometry.coordinates;
+              const exactCount = counts.get(`${lng},${lat}`) || 1;
+              return (
+                <MapMarker
+                  key={feature.properties.id || `marker-${idx}`}
+                  feature={feature}
+                  badgeCount={exactCount > 1 ? exactCount : undefined}
+                  onClick={handleMarkerClick}
+                />
+              );
+            });
+          })()}
 
         <ZoomHandler />
 
         <MapClickHandler
           geojson={geojson}
-          onFeaturesClick={(latlng, features) =>
-            setPopupInfo({ latlng, features })
-          }
+          onMapClick={() => setMarkerPopupInfo(null)}
+          onFeaturesClick={(latlng, features) => {
+            setMarkerPopupInfo(null);
+            setPopupInfo({ latlng, features });
+          }}
         />
 
         {popupInfo && (
@@ -471,6 +563,43 @@ const MapComponent: React.FC<MapComponentProps> = ({
                 ))}
               </div>
             </div>
+          </Popup>
+        )}
+
+        {markerPopupInfo && (
+          <Popup
+            position={markerPopupInfo.latlng}
+            offset={[0, 0]}
+            eventHandlers={{
+              remove: () => setMarkerPopupInfo(null),
+            }}
+            className='feature-popup marker-popup'
+          >
+            {markerPopupInfo.markers.length === 1 ? (
+              <MarkerTooltipCard feature={markerPopupInfo.markers[0]} />
+            ) : (
+              <div className='flex flex-col min-w-56 max-w-76 py-0.5'>
+                <div className='flex items-center justify-between pb-1 mb-1.5 border-b border-border/20 text-muted-foreground'>
+                  <span className='text-[10px] font-medium tracking-tight flex items-center gap-1.5'>
+                    <span className='inline-flex items-center justify-center min-w-4 h-4 px-1 text-[8.5px] rounded-full bg-muted text-muted-foreground font-mono font-medium'>
+                      {markerPopupInfo.markers.length}
+                    </span>
+                    Overlapping markers
+                  </span>
+                </div>
+
+                <div className='flex flex-col divide-y divide-border/30 max-h-80 overflow-y-auto pr-1'>
+                  {markerPopupInfo.markers.map((feature, idx) => (
+                    <div
+                      key={feature.properties.id || idx}
+                      className={idx > 0 ? 'pt-2.5' : 'pb-1'}
+                    >
+                      <MarkerTooltipCard feature={feature} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </Popup>
         )}
       </MapContainer>

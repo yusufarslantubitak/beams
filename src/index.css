@@ -150,6 +150,7 @@
 .custom-lucide-marker {
   background: transparent !important;
   border: none !important;
+  overflow: visible !important;
 }
 
 .custom-lucide-marker .marker-icon-wrapper {
