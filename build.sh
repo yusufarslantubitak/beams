@@ -10,7 +10,7 @@ rm -rf dist release
 mkdir -p release
 
 echo "Building web app..."
-npm run build
+pnpm run build
 
 if [ ! -f "dist/index.html" ]; then
     echo "Web app build failed: dist/index.html not found"
