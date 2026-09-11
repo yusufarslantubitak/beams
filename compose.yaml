@@ -1,0 +1,15 @@
+services:
+  release:
+    image: golang:1.23-alpine
+    pull_policy: never
+    user: "${UID:-1000}:${GID:-1000}"
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - CGO_ENABLED=0
+      - GOOS=linux
+      - GOARCH=amd64
+      - GOCACHE=/tmp/.cache
+    command: >
+      sh -c "mkdir -p release && go build -ldflags='-s -w' -o release/geojson-map-app ."

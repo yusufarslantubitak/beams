@@ -8,7 +8,8 @@
     "backend": "node backend.js",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "release": "./build.sh"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.2.8",

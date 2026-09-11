@@ -1,0 +1,22 @@
+FROM golang:1.23-alpine AS builder
+
+WORKDIR /app
+
+# Copy Go source and built web assets
+COPY go.mod ./
+COPY serve.go ./
+COPY dist/ ./dist/
+
+# Build static executable
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o /out/geojson-map-app .
+
+# Default export target for: docker build -f Dockerfile.release --output release .
+FROM scratch AS export
+COPY --from=builder /out/geojson-map-app /
+
+# Optional standalone container target
+FROM alpine:3.20 AS runner
+WORKDIR /app
+COPY --from=builder /out/geojson-map-app /app/geojson-map-app
+EXPOSE 8765
+ENTRYPOINT ["/app/geojson-map-app"]
