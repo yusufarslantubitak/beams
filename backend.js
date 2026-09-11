@@ -55,10 +55,12 @@ const server = http.createServer((req, res) => {
   }
 });
 
-server.listen(PORT, '127.0.0.1', () => {
-  console.log(`GeoJSON server running at http://127.0.0.1:${PORT}`);
-  console.log(`Serving hexagons.geojson at http://127.0.0.1:${PORT}/map/hexagons.geojson`);
-  console.log(`Serving markers.geojson at http://127.0.0.1:${PORT}/map/markers.geojson`);
+const HOST = process.env.HOST || '0.0.0.0';
+
+server.listen(PORT, HOST, () => {
+  console.log(`GeoJSON server running at http://${HOST}:${PORT}`);
+  console.log(`Serving hexagons.geojson at http://${HOST}:${PORT}/map/hexagons.geojson`);
+  console.log(`Serving markers.geojson at http://${HOST}:${PORT}/map/markers.geojson`);
   console.log('Press Ctrl+C to stop');
 });
 

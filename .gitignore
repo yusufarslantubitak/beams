@@ -13,6 +13,8 @@ dist-ssr
 release
 build
 *.local
+*.tar
+*.tar.gz
 
 # Editor directories and files
 .vscode/*

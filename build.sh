@@ -20,7 +20,13 @@ fi
 echo "Building static executable..."
 
 if command -v docker &>/dev/null && docker info &>/dev/null; then
-    echo "Using Docker (golang:1.23-alpine, offline-ready)..."
+    if ! docker image inspect golang:1.25-alpine &>/dev/null; then
+        if [ -f "golang-1.25-alpine.tar" ]; then
+            echo "Loading golang:1.25-alpine from archive..."
+            docker load -i golang-1.25-alpine.tar
+        fi
+    fi
+    echo "Using Docker (golang:1.25-alpine, offline-ready)..."
     docker run --pull=never --rm \
         --user "$(id -u):$(id -g)" \
         -v "$SCRIPT_DIR:/app" \
@@ -29,7 +35,7 @@ if command -v docker &>/dev/null && docker info &>/dev/null; then
         -e GOOS=linux \
         -e GOARCH=amd64 \
         -e GOCACHE=/tmp/.cache \
-        golang:1.23-alpine \
+        golang:1.25-alpine \
         go build -ldflags="-s -w" -o release/geojson-map-app .
 elif command -v go &>/dev/null; then
     echo "Docker not available, falling back to host Go..."

@@ -1,5 +1,6 @@
-node_modules
 .git
 release
 .vite-temp
 *.log
+*.tar
+*.tar.gz

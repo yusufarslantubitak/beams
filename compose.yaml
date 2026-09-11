@@ -1,6 +1,18 @@
 services:
+  dev:
+    image: beams-dev:latest
+    pull_policy: never
+    ports:
+      - "5173:5173"
+      - "8006:8006"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+
   release:
-    image: golang:1.23-alpine
+    image: golang:1.25-alpine
     pull_policy: never
     user: "${UID:-1000}:${GID:-1000}"
     working_dir: /app
